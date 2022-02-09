@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Co-op Tetris</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script type="module" src="../src/devgame.ts" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <div id='lobby code'></div>
+        <div id='player list'></div>
+        <button id='start button'> start! </button>
+      </div>
+      <div class="l-col">
+        <canvas id="hold-canvas" width="160px" height="96px"></canvas>
+        <p id=FPS>0</p>
+      </div>
+	    <canvas id="board-canvas" width="320px" height="640px"></canvas>
+      <div class="r-col">
+        <canvas id="bag-canvas" width = "160px" height = "480" ></canvas>
+        <div id=timer>0</div>
+        <div id=line-counter>0/40</div>
+      </div>
+   </div>r
+  </body>
+</html>
