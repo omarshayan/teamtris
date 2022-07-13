@@ -1,0 +1,17 @@
+.grid-container {
+    width: 768px;
+    height: 512px;
+    margin-right: auto; 
+    margin-left: auto;
+    display: grid;
+    grid-template-columns: 384px 384px;
+    column-gap: 20px;
+    border-color: aqua;
+    border-width: 1em;
+}
+
+.nav-container {
+    display: grid;
+    grid-template-rows: 64px 64px 64px 64px;
+    row-gap: 20px;
+}

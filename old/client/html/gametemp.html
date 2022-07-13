@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Co-op Tetris</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script type="module" src="../src/gamedommanip.ts" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="l-col">
+        <canvas id="hold-canvas" width="160px" height="96px"></canvas>
+        <p id=FPS>0</p>
+        <p id=turn></p> 
+        <label for="p2p-role">
+          <select name="p2p-role" id="p2p-role">
+            <option value="not playing">non></option>
+            <option value="host">host</option>
+            <option value="guest">guest</option>
+          </select>
+      </div>
+	    <canvas id="board-canvas" width="320px" height="640px"></canvas>
+      <div class="r-col">
+        <canvas id="bag-canvas" width = "160px" height = "480" ></canvas>
+        <div id=timer>0</div>
+        <div id=line-counter>0/40</div>
+      </div>
+   </div>r
+  </body>
+</html>

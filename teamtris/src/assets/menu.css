@@ -1,0 +1,82 @@
+.grid-container {
+    width: 512px;
+    height: 512px;
+    margin-right: auto; 
+    margin-left: auto;
+    display: grid;
+    grid-template-columns: 260px 260px;
+    column-gap: 20px;
+    border-color: red;
+    border-width: 1em;
+}
+
+
+.nav-container {
+    display: grid;
+    grid-template-rows: 64px 64px 64px 64px;
+    row-gap: 20px;
+}
+
+.route {
+    text-align: center;
+    justify-content: center;
+}
+
+.route-btn {
+    height: 512px;
+    font-size: 2em;
+    border-style: solid;
+    border-color: white;
+    border-width: 2px;
+}
+
+.sidebar {
+    height: 60px;
+}
+
+.input {
+    width: 256;
+}
+
+.label {
+    text-align: center;
+    justify-content: center;
+}
+
+.new-game-label {
+    position: fixed;
+    z-index: 1;
+    left: 0px;
+    top: 0px
+}
+
+.hover {
+    filter: brightness(200%);
+    backdrop-filter: brightness(200%);
+    position: relative;
+    animation-duration: .05s;
+    animation-name: hover;
+    animation-fill-mode: forwards;
+}
+@keyframes hover {
+    from {
+        left: 0;
+        top: 0;
+    }
+    to {
+        left: -5px;
+        top: -5px;
+    }
+}
+
+
+/* 
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+} */
