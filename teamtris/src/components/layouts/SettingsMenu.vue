@@ -19,13 +19,16 @@
     </div>
 </template> -->
 <script setup>
-    import Slider from "../elements/Slider.vue"
+    import { Store, useStore } from 'vuex'
+    import { key } from '@/store/store'
     import InputSlider from "../elements/InputSlider.vue"
-
-    function updateValField(val) {
-        console.log(val)
-    }   
-
+    
+    const store = useStore(key)
+    console.log("arr ", store.state.config.arr)
+    const updateArr = (val) => {
+        console.log('updating Arr to ', val)
+        store.commit('setArr', val)
+    }
 </script>
 <template>
     <div class='grid-container'>
@@ -35,6 +38,7 @@
                     class='grid-item'
                     :maximum="100"
                     :minimum="1"
+                    @update:value="updateArr"
                 >
                     <template v-slot:label>
                         ARR
@@ -49,6 +53,7 @@
                     class='grid-item'
                     :maximum="333"
                     :minimum="10"
+                    @update:value="updateDas"
                 >
                     DAS
                     <template v-slot:label>
@@ -64,8 +69,14 @@
                     class='grid-item'
                     :maximum="333"
                     :minimum="0"
+                    @update:value="updateDcf"
                 >
-                    DCD
+                    <template v-slot:label>
+                        DCF
+                    </template>
+                   <template v-slot:unit-label>
+                       ms
+                   </template> 
                 </InputSlider>
             </div>
             <div class='grid-item'>
@@ -73,8 +84,14 @@
                     class='grid-item'
                     :maximum="100"
                     :minimum="1"
+                    @update:value="updateSdf"
                 >
-                    SDF
+                    <template v-slot:label>
+                        SDF
+                    </template>
+                   <template v-slot:unit-label>
+                       X
+                   </template> 
                 </InputSlider>
             </div>
         </div>

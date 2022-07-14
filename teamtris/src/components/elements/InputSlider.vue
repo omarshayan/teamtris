@@ -10,7 +10,8 @@
     const input = ref(null)
     const slider = ref(null)
 
-    let updateInputField = (event) => {
+    let onSliderUpdate = (event) => {
+        emit('update:value', event)
         console.log(event)
         input.value.updateText(Math.round(event))
         // sliderVal = Number(message)
@@ -22,12 +23,16 @@
         maximum: Number,
         minimum: Number,
     })
+    const emit = defineEmits([
+        'update:value'
+    ])
 
     const intRegex = /\d/
     let onInputKeyDown = (event) => {
         console.log(event)
     }
     let onInputUpdate = (event) => {
+        emit('update:value', event)
         console.log(event)
         // update slider value
         slider.value.setSliderValue(event)
@@ -59,7 +64,7 @@
                 ref='slider'
                 :maximum="maximum"
                 :minimum="minimum"
-                @update:val='updateInputField'
+                @update:val='onSliderUpdate'
             />
         </div>
     </div>
@@ -72,9 +77,9 @@
     align-content: flex-start;
 }
 
-.flex-item {
+/* .flex-item {
     background-color:gray
-}
+} */
 
 .inputfield {
 
@@ -83,6 +88,11 @@
     /* width: 60px; */
 }
 
+.unit-label {
+    position:relative;
+    top:-20px;
+    left:60px;
+}
 .input {
     width: 60px
 }

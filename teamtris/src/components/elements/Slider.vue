@@ -98,7 +98,7 @@
                 if (val < this.$props.minimum || val > this.$props.maximum) return false
                 this.$refs.process.style.width = `${val/this.$props.maximum * parseFloat(this.$refs.elem.style['width'])}px`
                 this.$refs.process.style['left'] = 0
-                this.$emit('update:val', val)
+                this.$emit('update:val', Math.round(val))
             },
             drag(e) {
                 if (this.dragging) {

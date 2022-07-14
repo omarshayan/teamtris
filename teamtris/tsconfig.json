@@ -20,7 +20,7 @@
     "importsNotUsedAsValues": "preserve",
     "isolatedModules": true,
     "moduleResolution": "node",
-    "preserveValueImports": true,
+    "preserveValueImports": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
