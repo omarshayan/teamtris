@@ -1,35 +1,35 @@
 export interface ConfigState {
-    arr: Number
-    das: Number
-    dcf: Number
-    sdf: Number
+    arr: number
+    das: number
+    dcf: number
+    sdf: number
 }
 
 
 
 export default {
     state: () => ({
-      //  arr: 100,
-      //  das: 100,
-      //  dcf: 100,
-      //  sdf: 1,
-    arr: Number,
-    das: Number,
-    dcf: Number,
-    sdf: Number,
+       arr: 100,
+       das: 100,
+       dcf: 100,
+       sdf: 1,
+    // arr: number,
+    // das: number,
+    // dcf: number,
+    // sdf: number,
     }),
     mutations: {
-        setArr: function(state: ConfigState, arr: Number) {
+        setArr: function(state: ConfigState, arr: number) {
             state.arr = arr
         },
-        setDas: function(state: ConfigState, das: Number) {
+        setDas: function(state: ConfigState, das: number) {
 
             state.das = das
         },
-        setDcf: function(state: ConfigState, dcf: Number) {
+        setDcf: function(state: ConfigState, dcf: number) {
             state.dcf = dcf
         },
-        setSdf: function(state: ConfigState, sdf: Number) {
+        setSdf: function(state: ConfigState, sdf: number) {
             state.sdf = sdf
         },
     }

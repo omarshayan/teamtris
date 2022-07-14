@@ -18,6 +18,11 @@ body {
     background-color: #18143f;
 }
 
+#board-canvas {
+    width: 320px;
+    height: 640px;
+}
+
 .multiplayer-menu {
     display: flex;
     width: 20%;
@@ -55,5 +60,3 @@ form {
     display: flex;
     flex-direction: column;
 }
-
-

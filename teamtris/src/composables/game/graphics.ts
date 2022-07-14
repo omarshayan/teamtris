@@ -1,3 +1,5 @@
+import Renderer from '@/composables/renderer'
+
 const spriteSheet = {
     //sprite index map
     //top left of sprite sheet is 0,0
@@ -32,7 +34,7 @@ const spriteSheet = {
     'L_preview_grey': [1, 6],
 }
 
-class Renderer {
+class GameRenderer{
 
     protected contexts: {[id: string]: CanvasRenderingContext2D}
     private gameRes: [width: number, height: number]
@@ -41,7 +43,7 @@ class Renderer {
     private sprites: HTMLImageElement
     private previewSprites: HTMLImageElement
     private previewSize: [width: number, height: number]
-    
+
 
     constructor(canvases: {[id: string]: HTMLCanvasElement} ) {
 
@@ -58,8 +60,8 @@ class Renderer {
     public async loadSprites(){
         try{
             [this.sprites, this.previewSprites] = await Promise.all([
-                Renderer.loadImageFromUrl("http://localhost:4000/static/sprite-atlas.png"),
-                Renderer.loadImageFromUrl("http://localhost:4000/static/preview-sprites.png")])
+                Renderer.loadImageFromUrl("src/assets/sprite-atlas.png"),
+                Renderer.loadImageFromUrl("src/assets/preview-sprites.png")])
         } catch (e) {
             console.log(e)
             console.log("error!")
@@ -79,7 +81,7 @@ class Renderer {
     }
 
     public async renderSprite(contextId: string, spriteId: string, y?:number, x?: number, mul: number=1) {
-        //render sprite on respective context 
+        //render sprite on respective context
         const coords = spriteSheet[spriteId]
 
         switch(contextId){
@@ -88,14 +90,14 @@ class Renderer {
                 break;
             }
             case "bag": {
-                this.contexts["bag"].drawImage(this.previewSprites, 
+                this.contexts["bag"].drawImage(this.previewSprites,
                     0, coords[1]*this.previewSize[1], this.previewSize[0], this.previewSize[1],
                     0, y*this.previewSize[1], this.previewSize[0], this.previewSize[1])
                 break;
             }
             case "hold": {
                 this.clearHeldPiece()
-                this.contexts["hold"].drawImage(this.previewSprites, 
+                this.contexts["hold"].drawImage(this.previewSprites,
                     coords[0]*this.previewSize[0], coords[1]*this.previewSize[1], this.previewSize[0], this.previewSize[1],
                     0, 0, this.previewSize[0], this.previewSize[1])
                 break;
@@ -103,14 +105,14 @@ class Renderer {
             default: {
                 break;
             }
-        }        
+        }
     }
 
     public async renderCell(spriteId: string, y:number, x: number){
         const coords = spriteSheet[spriteId]
         const mul = this.spriteSize
 
-        this.contexts["game"].drawImage(this.sprites, 
+        this.contexts["game"].drawImage(this.sprites,
             coords[0]*mul, coords[1]*mul, mul, mul,
             x*mul, y*mul, mul, mul
             )
@@ -126,4 +128,4 @@ class Renderer {
 
 }
 
-export default Renderer
+export default GameRenderer

@@ -1,5 +1,5 @@
 import { InjectionKey } from 'vue'
-import { Store, createStore } from 'vuex'
+import { Store, createStore, useStore as baseUseStore} from 'vuex'
 import configModule, { ConfigState } from './config'
 
 export interface State {
@@ -13,3 +13,7 @@ export const store = createStore<State>({
         config: configModule
     }
 })
+
+export function useStore() {
+    return baseUseStore(key)
+}

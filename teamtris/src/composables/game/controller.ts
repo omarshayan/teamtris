@@ -13,11 +13,11 @@ class Controller {
 
     constructor(game: Game){
         this.game = game
-
+        console.log('arr seet to ', this.game.config.arr)
         this.gravT = .5
-        this.sdT = .02
-        this.dasT = .167
-        this.arT = .033
+        this.sdT = .1 / this.game.config.sdf
+        this.dasT = this.game.config.das * 0.001
+        this.arT = this.game.config.arr * 0.001
         this.lockDelay = 2
         if(sessionStorage["arr"]){
             console.log("importing arr settings")
@@ -36,14 +36,14 @@ class Controller {
         }
     }
 
-    public async initialize() { 
+    public async initialize() {
         document.addEventListener("keydown", e => {
             e. preventDefault()
             this.keyStates[e.key] = true
             if(!e.repeat){
                 this.keyPress(e.key)
             }
-            
+
         })
 
         document.addEventListener("keyup", e => {
@@ -54,21 +54,21 @@ class Controller {
 
     public keyPress(key: string){
 
-        switch(key) { 
-            case "ArrowLeft": { 
+        switch(key) {
+            case "ArrowLeft": {
                 // console.log('left')
                 if(this.game.activeTurn){
                     this.game.player.move([0, -1], this.game.board)
                 }
-               break; 
-            } 
-            case "ArrowRight": { 
+               break;
+            }
+            case "ArrowRight": {
                 // console.log('right')
                 if(this.game.activeTurn){
                     this.game.player.move([0, 1], this.game.board)
                 }
-               break; 
-            } 
+               break;
+            }
 
             case "z": {
                 if(this.game.activeTurn){
@@ -104,7 +104,7 @@ class Controller {
             case "ArrowUp": {
                 if(this.game.activeTurn){
                     this.game.player.rotate(1, this.game.board)
-                }                        break; 
+                }                        break;
             }
 
             case "ArrowDown": {
@@ -131,15 +131,15 @@ class Controller {
             }
 
 
-         } 
+         }
     }
 
     public poll(game: Game) {
         if (this.keyStates["ArrowDown"]) {
-            
+
         }
 
-        if (this.keyStates["ArrowLeft"]) {     
+        if (this.keyStates["ArrowLeft"]) {
 
         }
 
@@ -224,7 +224,7 @@ class Controller {
 
         }
 
-        
+
 
 
 

@@ -5,7 +5,7 @@ import Engine from "./engine"
 import UI from "./UI"
 import Peer from "simple-peer"
 import Game from "./game"
-
+import { ConfigState } from '@/store/config'
 import Message from "./messenger"
 import { runInThisContext } from "vm"
 import { urlToHttpOptions } from "url"
@@ -22,8 +22,8 @@ class Game2P extends Game {
     role: string
     remotePlayerStateQueue: [y: number, x: number, orientation: number][]
 
-    constructor(renderer: Renderer, gameUI: UI, peer: Peer, isHost: boolean){
-        super(renderer, gameUI)
+    constructor(config: ConfigState, renderer: Renderer, peer: Peer, isHost: boolean){
+        super(config, renderer)
         if(isHost){
             this.activeTurn = true
             this.role = "host"
@@ -87,19 +87,19 @@ class Game2P extends Game {
 
             this.peer.send(JSON.stringify(init_gamestate))
 
-            
+
 
             this.player = this.bag.pop()
             await this.renderer.loadSprites()
 
-            
-    
+
+
             const engine = new Engine(this.logic.bind(this))
             engine.start()
         }
 
         if(!this.isHost){
-        
+
             this.peer.on("data", data => {
                 let dataObj = JSON.parse(data)
 
@@ -148,17 +148,17 @@ class Game2P extends Game {
                 }
 
 
-                
-        
+
+
 
             })
         }
 
     }
-    
+
     public logic(clock: {[clk: string]: number}) {
 
-        
+
         if(this.activeTurn){
             let player_pos = {
                 metadata: "player position",
@@ -166,15 +166,15 @@ class Game2P extends Game {
                 y: this.player.pos[0],
                 orientation: this.player.orientation
             }
-    
-    
+
+
             this.peer.send(JSON.stringify(player_pos))
         }
 
-        //all clock values come in with 1 frames dt at least 
+        //all clock values come in with 1 frames dt at least
 
 
-        //if it's a new game or turn, initialize clocks to 0 
+        //if it's a new game or turn, initialize clocks to 0
         if(this.new){
             clock.sd = 0
             clock.grav = 0
@@ -203,7 +203,7 @@ class Game2P extends Game {
         }
 
 
-        //check if a piece was placed 
+        //check if a piece was placed
         if(this.player.placed == true){
             let placedposx = this.player.pos[1]
             let placedposy = this.player.pos[0]
@@ -253,7 +253,7 @@ class Game2P extends Game {
 
 
 
-    
+
 }
 
 export default Game2P

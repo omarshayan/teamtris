@@ -8,10 +8,10 @@ export default class gamePreviewRenderer extends Renderer {
         super(canvas)
         this.loadImages()
     }
-    
+
     private async loadImages(){
         try{
-            this.tempBackground = await gamePreviewRenderer.loadImageFromUrl('/src/assets/new-game-preview-cropped.png')
+            this.tempBackground = await gamePreviewRenderer.loadImageFromUrl('src/assets/new-game-preview-cropped.png')
         } catch (e) {
             console.log(e)
             console.log("error!")

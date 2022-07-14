@@ -19,7 +19,7 @@ const tetrimatrices:{
     T: [[[0, 1, 0],
         [1, 1, 1],
         [0, 0, 0]],
-        
+
         [[0, 1, 0],
         [0, 1, 1],
         [0, 1, 0]],
@@ -45,7 +45,7 @@ const tetrimatrices:{
         [[0, 0, 0, 0],
         [0, 0, 0, 0],
         [1, 1, 1, 1],
-        [0, 0, 0, 0]], 
+        [0, 0, 0, 0]],
 
         [[0, 1, 0, 0],
         [0, 1, 0, 0],
@@ -67,7 +67,7 @@ const tetrimatrices:{
     S: [[[0, 1, 1],
         [1, 1, 0],
         [0, 0, 0]],
-        
+
         [[0, 1, 0],
         [0, 1, 1],
         [0, 0, 1]],
@@ -83,7 +83,7 @@ const tetrimatrices:{
     Z: [[[1, 1, 0],
         [0, 1, 1],
         [0, 0, 0]],
-        
+
         [[0, 0, 1],
         [0, 1, 1],
         [0, 1, 0]],
@@ -99,7 +99,7 @@ const tetrimatrices:{
     J: [[[1, 0, 0],
         [1, 1, 1],
         [0, 0, 0]],
-        
+
         [[0, 1, 1],
         [0, 1, 0],
         [0, 1, 0]],
@@ -115,7 +115,7 @@ const tetrimatrices:{
     L: [[[0, 0, 1],
         [1, 1, 1],
         [0, 0, 0]],
-        
+
         [[0, 1, 0],
         [0, 1, 0],
         [0, 1, 1]],
@@ -159,15 +159,15 @@ export class Tetrimino {
     }
 
     public render(contextId: string, renderer: Renderer, board: Board) {
-                        
+
         //render shadow
         for(let row = this.pos[0]; row < board.rows; row++) {
-            if(!board.checkCollision(this, [row - this.pos[0], 0]) && 
+            if(!board.checkCollision(this, [row - this.pos[0], 0]) &&
                 board.checkCollision(this, [row - this.pos[0] + 1, 0])){
                 for(let x = 0; x < this.size; x++) {
                     for(let y = 0; y < this.size; y++){
                         if(this.shape[y][x] == 1)
-                        
+
                         renderer.renderSprite(contextId, this.letter + "_shadow", row + y, this.pos[1] + x)
                     }
                 }
@@ -179,7 +179,7 @@ export class Tetrimino {
         for(let x = 0; x < this.size; x++) {
             for(let y = 0; y < this.size; y++){
                 if(this.shape[y][x] == 1)
-                
+
                 renderer.renderSprite(contextId, this.letter, this.pos[0] + y, this.pos[1] + x)
             }
         }
@@ -189,7 +189,7 @@ export class Tetrimino {
         for(let x = 0; x < this.size; x++) {
             for(let y = 0; y < this.size; y++){
                 if(this.shape[y][x] == 1)
-                
+
                 renderer.renderSprite(contextId, this.letter, this.pos[0] + y, this.pos[1] + x)
             }
         }
@@ -228,7 +228,7 @@ export class Tetrimino {
         //     this.lock_clock = 0
         // }
         if(board.checkCollision(this)){
-            
+
 
             let R = 1
             let L = 3
@@ -412,7 +412,7 @@ export class Tetrimino {
                     let temp2 = board.cells
                     temp2[this.pos[0] + y][this.pos[1] + x] = temp
                     board.cells = temp2
-                } 
+                }
             }
         }
         this.placed = true
@@ -426,7 +426,7 @@ export class Tetrimino {
 
 }
 
- 
+
 export class Board {
     rows: number
     cols: number
@@ -467,12 +467,13 @@ export class Board {
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-                      
-        
+
+
 
     }
 
     public render(renderer: Renderer) {
+        console.log('rendering board')
         for(let row = 0; row < this.rows; row++) {
             for(let col = 0; col < this.cols; col++){
                 renderer.renderSprite("game", this.cells[row][col], row, col)
@@ -481,17 +482,17 @@ export class Board {
     }
 
     public checkCollision(player: Tetrimino, dir: [dy: number, dx: number]=[0,0]): boolean {
-        //check each cell player is occupying 
+        //check each cell player is occupying
         for(let x = 0; x < player.size; x++) {
             for(let y = 0; y < player.size; y++){
                 if(player.shape[y][x] == 1){
-                    if(player.pos[0] + y + dir[0] >= this.rows || 
+                    if(player.pos[0] + y + dir[0] >= this.rows ||
                     //    player.pos[1] + x >= this.cols ||
                        this.cells[player.pos[0] + y + dir[0]][player.pos[1] + x + dir[1]] != 0) {
                         return true
 
                     }
-                } 
+                }
             }
         }
         return false
@@ -503,7 +504,7 @@ export class Board {
                 if(player.shape[y][x] == 1){
                     if(player.pos[1] + x + dir[1] >= this.cols || player.pos[1] + x + dir[1] < 0)
                         return false
-                } 
+                }
             }
         }
         return true
@@ -525,12 +526,12 @@ export class Board {
             }
         }
         this.linesCleared += linesCleared
-        
+
     }
 
 
 
-    
+
 }
 
 export class Bag {
@@ -549,19 +550,19 @@ export class Bag {
 
     private shuffledBag(letters: string[]): Tetrimino[] {
         let currentIndex = letters.length,  randomIndex;
-    
+
         // While there remain elements to shuffle...
         while (currentIndex != 0) {
-      
+
           // Pick a remaining element...
           randomIndex = Math.floor(Math.random() * currentIndex);
           currentIndex--;
-      
+
           // And swap it with the current element.
           [letters[currentIndex], letters[randomIndex]] = [
             letters[randomIndex], letters[currentIndex]];
         }
-      
+
         return Array.from(letters, letter => new Tetrimino(letter));
       }
 
@@ -609,8 +610,6 @@ export class Bag {
 
           return newPiece
       }
-    
 
-} 
-   
 
+}

@@ -1,25 +1,18 @@
 <script setup>
-    import { 
+    import {
         ref,
+        onMounted,
         defineProps
     }   from 'vue'
     import Slider from '../elements/Slider.vue'
     import Input from '../elements/Input.vue'
 
-    var sliderVal = 0;
     const input = ref(null)
     const slider = ref(null)
 
-    let onSliderUpdate = (event) => {
-        emit('update:value', event)
-        console.log(event)
-        input.value.updateText(Math.round(event))
-        // sliderVal = Number(message)
-    }
-    
+
     const props = defineProps({
-        sliderVal: Number,
-        fieldVal: Number,
+        initial: Number,
         maximum: Number,
         minimum: Number,
     })
@@ -28,6 +21,16 @@
     ])
 
     const intRegex = /\d/
+
+    // lifecycle
+
+    onMounted(() => {
+        slider.value.setSliderValue(props.initial)
+        input.value.updateText(Math.round(props.initial))
+    })
+
+    // events
+
     let onInputKeyDown = (event) => {
         console.log(event)
     }
@@ -39,12 +42,19 @@
         // sliderVal = Number(message)
     }
 
+    let onSliderUpdate = (event) => {
+        emit('update:value', event)
+        console.log(event)
+        input.value.updateText(Math.round(event))
+        // sliderVal = Number(message)
+    }
+
 </script>
 <template>
     <slot class='label' name='label'></slot>
     <div class='flex-container'>
         <div class='flex-item'>
-            <Input 
+            <Input
                 class='inputfield'
                 ref='input'
                 :digits="3"
@@ -53,7 +63,7 @@
                 :height="30"
                 :maximum="maximum"
                 :minimum="minimum"
-                v-model="fieldVal" 
+                v-model="fieldVal"
                 @update:input='onInputUpdate'
                 @keydown:input='onInputKeyDown'
             />
