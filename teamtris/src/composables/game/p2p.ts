@@ -10,19 +10,7 @@ import Game2P from "./game2p"
 
 import Manip_DOM from "./2p_dom"
 
-/*
-functionality to create lobby with unique code
-
-*/
-
-
-
-
-
-async function Host(){
-
-
-
+export async function Host(){
 
     function connect2socket(url: string): WebSocket {
         var socket = new WebSocket(url)
@@ -35,9 +23,6 @@ async function Host(){
 
     var socket = await connect2socket("ws://localhost:4000")
 
-    let start_button = document.getElementById("start button")
-    // start_button.onclick = 
-    
     
     function InitiateP2P(){
         console.log("Initiating P2P")
@@ -52,7 +37,7 @@ async function Host(){
         })
     
         host_peer.on('connect', () => {
-            console.log("trying to send a mesage to my little boy")
+            console.log("connected")
             host_peer.send("hey whats up guest dude, guess we're connected huh")
             Manip_DOM(host_peer, true)
         })
@@ -71,11 +56,6 @@ async function Host(){
         }
 
     }
-
-
-
-
-
     socket.onopen = function (event) {
         console.log('socket opened from host!')
         // let message = {
@@ -99,37 +79,25 @@ async function Host(){
         if(message.metadata == "new lobby"){
             let lobby = JSON.parse(message.content)
             let lobby_code_el = document.getElementById("lobby code")
-            console.log(lobby.code)
-            lobby_code_el.innerText = lobby.code
+            console.log('lobby code ' ,lobby.code)
+            console.log( lobby.code )
 
         }
 
         if(message.metadata == "lobby ready"){
             let player_list_el = document.getElementById("player list")
             console.log("LOBBY READY TO START!")
-            player_list_el.innerText = "A player has joined the lobbert. \nInitiating P2P..."
+            console.log( "A player has joined the lobbert. \nInitiating P2P...")
 
             InitiateP2P()
         }
-
-
-
-
-
     }
 
-    
-
-
-
+    return host_peer
 }
 
 
-
-
-
-
-async function Guest(connect_code: String){
+export async function Guest(connect_code: String){
 
     function connect2socket(url: string): WebSocket {
         var socket = new WebSocket(url)
@@ -200,25 +168,20 @@ async function Guest(connect_code: String){
 }
     
 
-async function joinLobby(){
+export default async function joinLobby(isHost: boolean, connectCode?: string){
 
     //chat
 
-
-
-
-    if(sessionStorage.getItem("role") === "host"){
-
+    if(isHost){
         Host()
-    
     }
     
-    if(sessionStorage.getItem("role") === "guest"){
-        let connect_code = sessionStorage.getItem("connect code")
-        document.getElementById("lobby code").innerHTML = "connecting to lobby with code: " + connect_code
-        Guest(connect_code)
+    if(!isHost){
+        console.log('connectcode: ', connectCode)
+        if(!connectCode) {
+            console.error('guest is missing connect code')
+        }
+        Guest(connectCode!)
 
     }
 }
-
-joinLobby()
