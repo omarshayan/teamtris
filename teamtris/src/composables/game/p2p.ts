@@ -10,7 +10,7 @@ import Game2P from "./game2p"
 
 import Manip_DOM from "./2p_dom"
 
-export async function Host(): Peer {
+export async function Host(game: Game2P, onConnect: (game: Game2P) => void): Peer {
 
     function connect2socket(url: string): WebSocket {
         var socket = new WebSocket(url)
@@ -19,7 +19,7 @@ export async function Host(): Peer {
             setTimeout(() => connect2socket(url))
         })
         return socket
-    } 
+    }
 
     var socket = await connect2socket("ws://localhost:4000")
 
@@ -28,18 +28,19 @@ export async function Host(): Peer {
         console.log("Initiating P2P")
         console.log(host_peer)
 
-        
+
 
         host_peer.on('signal', data => {
             const P2Pdata = new Message("host", "p2p data", data)
             console.log("sending hostdata to server: ")
             socket.send(JSON.stringify(P2Pdata))
         })
-    
+
         host_peer.on('connect', () => {
             console.log("connected")
             host_peer.send("hey whats up guest dude, guess we're connected huh")
-            Manip_DOM(host_peer, true)
+            game.providePeer(host_peer)
+            onConnect(game)
         })
 
         socket.onmessage = async function( event) {
@@ -73,8 +74,8 @@ export async function Host(): Peer {
         const message = JSON.parse(msgstring)
         console.log('message from server: ')
         console.log(message)
-        
-        
+
+
 
         if(message.metadata == "new lobby"){
             let lobby = JSON.parse(message.content)
@@ -134,12 +135,12 @@ export async function Guest(connect_code: String){
 
         if(message.metadata == "lobby ready"){
             console.log("LOBBY READY TO START!")
-            
+
         }
 
         if(message.metadata == "game start"){
             console.log(" starting game...")
-            
+
         }
 
         if(message.metadata == "remote p2p data"){
@@ -152,7 +153,7 @@ export async function Guest(connect_code: String){
                 console.log("sending guestdata to server: ")
                 socket.send(JSON.stringify(P2Pdata));
 
-                
+
             })
             guest_peer.on('data', data => {
                 Manip_DOM(guest_peer, false)
@@ -160,28 +161,28 @@ export async function Guest(connect_code: String){
             })
 
         }
-        
+
     }
 
 
 
 }
-    
 
-export default async function joinLobby(isHost: boolean, connectCode?: string){
+
+export default async function joinLobby(isHost: boolean, game: Game2P, onConnect: (game: Game2P) => void, connectCode?: string){
 
     //chat
 
     if(isHost){
-        Host()
+        Host(game, onConnect)
     }
-    
+
     if(!isHost){
         console.log('connectcode: ', connectCode)
         if(!connectCode) {
             console.error('guest is missing connect code')
         }
-        Guest(connectCode!)
+        Guest(game, onConnect, connectCode!)
 
     }
 }

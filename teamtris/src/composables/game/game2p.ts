@@ -22,7 +22,7 @@ class Game2P extends Game {
     role: string
     remotePlayerStateQueue: [y: number, x: number, orientation: number][]
 
-    constructor(config: ConfigState, renderer: Renderer, peer: Peer, isHost: boolean){
+    constructor(config: ConfigState, renderer: Renderer, isHost: boolean){
         super(config, renderer)
         if(isHost){
             this.activeTurn = true
@@ -33,9 +33,12 @@ class Game2P extends Game {
             this.role = "guest"
         }
         this.isHost = isHost
-        this.peer = peer
         this.remotePlayerStateQueue = []
 
+    }
+
+    public providePeer(peer: Peer) {
+        this.peer = peer
     }
 
     public async run() {

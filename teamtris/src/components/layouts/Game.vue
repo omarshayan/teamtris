@@ -12,8 +12,8 @@
 
   // events
 
-  let onLobbyJoin = (game: Game) => {
-
+  let onLobbyJoin = (game: Game2P) => {
+      game.run()
   }
   onMounted(() => {
     console.log('board canvas: ', boardCanvas)
@@ -35,8 +35,8 @@
 
     let game: Game;
     if (props.twoPlayer) {
-        joinLobby(props.isHost)
-        game = new Game2P(configuration, renderer,  props.isHost)
+        game = new Game2P(configuration, renderer, props.isHost)
+        joinLobby(props.isHost, game, onLobbyJoin)
     }
     else {
     game = new Game(configuration, renderer)
