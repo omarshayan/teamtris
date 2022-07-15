@@ -5,19 +5,22 @@
   import ConfigState from '@/store/config'
   import { useStore } from '@/store/store'
   import Game2P from '@/composables/game/game2p'
-  import joinLobby from '@/composables/game/p2p'
+  import P2P from '@/composables/game/p2p'
+
   const boardCanvas = ref<HTMLCanvasElement | null>(null)
   const holdCanvas = ref<HTMLCanvasElement | null>(null)
   const bagCanvas = ref<HTMLCanvasElement | null>(null)
 
-  const props = defineProps({
-    twoPlayer: Boolean,
-    isHost: Boolean,
-  })
+  const props = defineProps<{
+    twoPlayer: boolean,
+    isHost?: boolean,
+    connectCode?: string,
+  }>()
   
   // events
 
   let onLobbyJoin = (game: Game2P) => {
+      console.log('starting game!')
       game.run()
   }
   onMounted(() => {
@@ -36,10 +39,16 @@
     const renderer = new Renderer(canvases)
 
 
-    if (props.twoPlayer) {
+    if (props.twoPlayer && props.isHost != undefined) {
+      let game = new Game2P(configuration, renderer, props.isHost)
+      const p2p = new P2P(props.isHost, game, onLobbyJoin)
       console.log("two player game")
-        let game = new Game2P(configuration, renderer, props.isHost)
-        joinLobby(props.isHost, game, onLobbyJoin)
+      if(props.isHost){
+        p2p.setup(props.isHost, game, onLobbyJoin)
+      }
+      else if (!props.isHost){ 
+        p2p.setup(props.isHost, game, onLobbyJoin, props.connectCode)
+      }
     }
     else {
     let game = new Game(configuration, renderer)

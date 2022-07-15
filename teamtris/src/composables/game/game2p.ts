@@ -3,7 +3,7 @@ import Renderer from "./graphics"
 import Controller2P from "./controller2p"
 import Engine from "./engine"
 import UI from "./UI"
-import Peer from "simple-peer"
+import * as Peer from "simple-peer"
 import Game from "./game"
 import { ConfigState } from '@/store/config'
 import Message from "./messenger"

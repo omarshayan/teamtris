@@ -19,13 +19,12 @@
     </div>
 </template> -->
 <script setup>
-    import { Store, useStore } from 'vuex'
-    import { key } from '@/store/store'
+    import { Store } from 'vuex'
+    import { useStore }  from '@/store/store'
     import InputSlider from "../elements/InputSlider.vue"
 
-    const store = useStore(key)
-    console.log("arr ", store.state.config.arr)
-
+    const store = useStore()
+    
     // setting setters
     const updateArr = (val) => {
         console.log('updating Arr to ', val)

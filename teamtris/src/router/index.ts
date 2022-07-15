@@ -7,7 +7,7 @@ import HomeView from '../views/Home.vue'
 import SoloGame from '../views/SoloGame.vue'
 import Settings from '../views/Settings.vue'
 import Host     from '../views/Host.vue'
-
+import Guest    from '../views/Guest.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -33,6 +33,11 @@ const router = createRouter({
       path: '/host',
       name: 'host',
       component: Host,
+      meta: {transition: 'slide-left'}
+    },    {
+      path: '/guest',
+      name: 'guest',
+      component: Guest,
       meta: {transition: 'slide-left'}
     },
   ]

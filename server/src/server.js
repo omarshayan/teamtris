@@ -4,11 +4,13 @@ const cors = require('cors')
 
 const uuid = require('uuid')
 
-function Message(metadata, content){
-    this.sender = "server"
-    this.metadata = metadata
-    this.content = content
-    
+class Message {
+    constructor(metadata, content) {
+        this.sender = "server"
+        this.metadata = metadata
+        this.content = content
+
+    }
 }
 
 
@@ -103,7 +105,7 @@ wss.on('connection', (socket) => {
     
                 console.log('created lobby. current lobby list: ')
                 console.log(lobby_list)
-                let new_lobby_msg = new Message("new lobby", JSON.stringify(lobby))
+                let new_lobby_msg = new Message("", JSON.stringify(lobby))
                 socket.send(JSON.stringify(new_lobby_msg))
 
             }
@@ -260,6 +262,6 @@ function createLobby(lobby_list, hostsockid){
         this.gameReady = false
     }
 
-    let lobby = new Lobby(generateLobbyCode(lobby_list), hostsockid)
+    let lobby = (generateLobbyCode(lobby_list), hostsockid)
     return lobby
 }

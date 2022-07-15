@@ -4,7 +4,11 @@
     import NewGameIcon from "../icons/NewGameIcon.vue"
     import Input from '../elements/Input.vue'
     import LobbyAPI, { Lobby } from '@/api/lobby'
+    import { useStore } from '@/store/store'
+
     const router = useRouter()
+
+    const store = useStore()
 
     let alphaNumeric = new RegExp(/^[a-zA-Z0-9]+$/)
     let api = new LobbyAPI()
@@ -27,6 +31,10 @@
         // show a loading screen
         // connect to lobby and ridirect to game
 
+        if( e == lobby.code ) {
+            store.commit('setConnectCode', lobby.code)
+            router.push('/guest')
+        } 
         console.log('lobby: ' , lobby)
     }
 
