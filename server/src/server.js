@@ -15,14 +15,18 @@ function Message(metadata, content){
 let lobby_list = []
 
 const app = express()
-const wsport = process.env.PORT || 4000
-const port = process.env.PORT || 3000
+const wsport = process.env.PORT || 1234
+
+const port = process.env.PORT || 1235
 
 
 const wss = new WebSocket.Server({ server: app.listen(wsport)})
 
 var cors_config = {
-    origin: "http://localhost:1234",
+    origin: "http://localhost:3000",
+    methods: ["GET"],
+    allowedHeaders: ["Authorization", "Content-Type"],
+    maxAge: 86400,
     optionsSucessStatus: 200
 }
 

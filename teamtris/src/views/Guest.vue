@@ -4,7 +4,7 @@
 <template>
   <Game
     :two-player="true"
-    :is-host="true"
+    :is-host="false"
   >
   </Game>
 </template>

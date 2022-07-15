@@ -10,7 +10,8 @@
     const input = ref(null)
     const emit = defineEmits(
         ['update:input',
-        'keydown:input']
+        'keydown:input',
+        'onSubmit:input',]
     )
     function updateText(text){
         if(/^\d+$/.test(parseFloat(text))) {
@@ -29,6 +30,7 @@
         minimum: Number,
         inputVal: Number,
         maxlength: Number,
+        regex: RegExp,
     })
 
     onMounted(() => {
@@ -38,23 +40,33 @@
 
     })
 
-    const intRegex = /\d/
-    const integerChange = (event) => {
+    const validateInput = (e) => {
+        // check regex
+        if (!(
+            (e.key.length > 1) ||
+            props.regex.test(e.key)
+        )) e.preventDefault()
+        console.log('regex fine')
+        // check length
         if (
-            (event.key.length > 1) ||
-            (intRegex.test(event.key) &&
-            ( props.maxlength > (String(input.value.value).length)))
-        ) return
-        if (
-            ( props.maximum && props.minimum ) && 
-            ( props.maximum > parseFloat(String(input.value.value) + event.key))
-            // ( props.minimum < parseFloat(String(input.value.value) + event.key))
-        ) return
-        event.preventDefault()
+            props.maxlength < e.target.value.length
+        ) e.preventDefault()
+        console.log('length fine')
+        //check max/min
+        if (!( props.maximum && props.minimum ) && 
+            ( props.maximum > parseFloat(String(input.value.value) + e.key))
+        ) e.preventDefault()
+        console.log('max/min fine, returning')
+
+        return
     };
     let onInputKeyDown = (event) => {
         emit('keydown:input', event, event.target.value)
-        integerChange(event)
+        // check if form submission (enter, maybe hitting max chars?)
+        if (event.key == 'Enter') {
+            emit('onSubmit:input', event.target.value)
+        }
+        validateInput(event)
     }
     let onInputUpdate = (event) => {
         emit('update:input', event.target.value)
@@ -66,9 +78,7 @@
         <input 
             ref=input
             class='input'
-            type="number"
             step="1"
-            pattern="^[-/d]/d*$"
             :maxlength="maxlength"
             :value="inputVal"
             @input="onInputUpdate"

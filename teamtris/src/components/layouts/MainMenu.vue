@@ -1,28 +1,37 @@
-<script>
+<script setup lang='ts'>
+    import { useRouter } from 'vue-router'
     import MenuButton from "../elements/MenuButton.vue"
     import NewGameIcon from "../icons/NewGameIcon.vue"
     import Input from '../elements/Input.vue'
+    import LobbyAPI, { Lobby } from '@/api/lobby'
+    const router = useRouter()
 
-    export default {
-        components: {
-            MenuButton,
-            NewGameIcon,
-            Input,
-        },
-        methods: {
-            goToNewGame() {
-                this.$router.push('/host')
-            },
-            goToSettings() {
-                this.$router.push('/settings')
-
-            },
-            goToSoloGame() {
-                this.$router.push('/solo')
-            }
-        }
+    let alphaNumeric = new RegExp(/^[a-zA-Z0-9]+$/)
+    let api = new LobbyAPI()
+    // events
+    let goToNewGame = () => {
+        router.push('/host')
     }
+    let goToSettings = () => {
+        router.push('/settings')
+    }
+    let goToSoloGame = () => {
+        router.push('/solo')
+    }
+
+    let onConnectCodeSubmit = async (e) => {
+        console.log(e)
+        // validate alphanumeric and length?
+        // check if a lobby exists with that connect code
+        const lobby: Lobby = await api.getLobby(e)
+        // show a loading screen
+        // connect to lobby and ridirect to game
+
+        console.log('lobby: ' , lobby)
+    }
+
 </script>
+
 
 <template>
         <div class='grid-container'>
@@ -85,8 +94,10 @@
                 </MenuButton>
                 <Input
                     :maxlength="4"
+                    :regex="alphaNumeric"
                     :height="80"
                     :style="{ width: 256 }"
+                    @onSubmit:input="onConnectCodeSubmit"
                 ></Input>
             </div>
         </div>

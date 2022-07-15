@@ -20,7 +20,7 @@
         'update:value'
     ])
 
-    const intRegex = /\d/
+    const intRegex = new RegExp(/^\d+$/)
 
     // lifecycle
 
@@ -58,6 +58,7 @@
                 class='inputfield'
                 ref='input'
                 :digits="3"
+                :regex="intRegex"
                 :val="sliderVal"
                 :width="80"
                 :height="30"

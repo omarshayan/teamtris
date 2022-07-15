@@ -1,9 +1,8 @@
 
 import { Console } from 'console'
 import { hostname } from 'os'
-import Peer = require('simple-peer')
-import wrtc = require('wrtc')
-
+import * as Peer from 'simple-peer'
+import * as wrtc from 'wrtc'
 
 import Message from "./messenger"
 import Game2P from "./game2p"
@@ -21,7 +20,7 @@ export async function Host(game: Game2P, onConnect: (game: Game2P) => void): Pee
         return socket
     }
 
-    var socket = await connect2socket("ws://localhost:4000")
+    var socket = await connect2socket("ws://localhost:1234")
 
     var host_peer = new Peer({initiator: true, wrtc: wrtc})
     function InitiateP2P(host_peer: Peer){
@@ -109,7 +108,7 @@ export async function Guest(connect_code: String){
         return socket
     }
 
-    var socket = await connect2socket("ws://localhost:4000")
+    var socket = await connect2socket("ws://localhost:1234")
 
 
     socket.onopen = function (event) {
