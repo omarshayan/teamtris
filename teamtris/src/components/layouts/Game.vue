@@ -5,11 +5,16 @@
   import ConfigState from '@/store/config'
   import { useStore } from '@/store/store'
   import Game2P from '@/composables/game/game2p'
-  import { Host } from '@/composables/game/p2p'
+  import joinLobby from '@/composables/game/p2p'
   const boardCanvas = ref<HTMLCanvasElement | null>(null)
   const holdCanvas = ref<HTMLCanvasElement | null>(null)
   const bagCanvas = ref<HTMLCanvasElement | null>(null)
 
+  // events
+
+  let onLobbyJoin = (game: Game) => {
+
+  }
   onMounted(() => {
     console.log('board canvas: ', boardCanvas)
 
@@ -30,13 +35,14 @@
 
     let game: Game;
     if (props.twoPlayer) {
+        joinLobby(props.isHost)
         game = new Game2P(configuration, renderer,  props.isHost)
     }
     else {
     game = new Game(configuration, renderer)
+    game.run()
     }
 
-    game.run()
   })
 </script>
 <template>

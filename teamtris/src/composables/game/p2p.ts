@@ -10,7 +10,7 @@ import Game2P from "./game2p"
 
 import Manip_DOM from "./2p_dom"
 
-export async function Host(){
+export async function Host(): Peer {
 
     function connect2socket(url: string): WebSocket {
         var socket = new WebSocket(url)
@@ -23,12 +23,12 @@ export async function Host(){
 
     var socket = await connect2socket("ws://localhost:4000")
 
-    
-    function InitiateP2P(){
+    var host_peer = new Peer({initiator: true, wrtc: wrtc})
+    function InitiateP2P(host_peer: Peer){
         console.log("Initiating P2P")
         console.log(host_peer)
 
-        var host_peer = new Peer({initiator: true, wrtc: wrtc})
+        
 
         host_peer.on('signal', data => {
             const P2Pdata = new Message("host", "p2p data", data)
@@ -89,7 +89,7 @@ export async function Host(){
             console.log("LOBBY READY TO START!")
             console.log( "A player has joined the lobbert. \nInitiating P2P...")
 
-            InitiateP2P()
+            InitiateP2P(host_peer)
         }
     }
 
