@@ -3,7 +3,7 @@ import Renderer from "./graphics"
 import Controller2P from "./controller2p"
 import Engine from "./engine"
 import UI from "./UI"
-import * as Peer from "simple-peer"
+import SimplePeer from 'simple-peer'
 import Game from "./game"
 import { ConfigState } from '@/store/config'
 import Message from "./messenger"
@@ -16,7 +16,7 @@ import { urlToHttpOptions } from "url"
 function drawMap(tileImage: HTMLImageElement) {
 }
 class Game2P extends Game {
-    peer: Peer
+    peer: SimplePeer.Instance
     activeTurn: boolean
     isHost: boolean
     role: string
@@ -37,7 +37,7 @@ class Game2P extends Game {
 
     }
 
-    public providePeer(peer: Peer) {
+    public providePeer(peer: SimplePeer.Instance) {
         this.peer = peer
     }
 
@@ -79,7 +79,7 @@ class Game2P extends Game {
                 }
             })
 
-            let bag_data: String = (this.bag.queue.map(mino => mino.letter)).join()
+            let bag_data: string = (this.bag.queue.map(mino => mino.letter)).join()
 
 
 
@@ -244,10 +244,10 @@ class Game2P extends Game {
         this.bag.render(this.renderer, this.board)
 
         //update UI
-        this.UI.updateTimer(clock.game)
-        this.UI.updateLinesCleared(this.board.linesCleared)
-        this.UI.updateFPS(clock.dt)
-        this.UI.updateTurn(this.activeTurn)
+        // this.UI.updateTimer(clock.game)
+        // this.UI.updateLinesCleared(this.board.linesCleared)
+        // this.UI.updateFPS(clock.dt)
+        // this.UI.updateTurn(this.activeTurn)
 
         return clock
     }

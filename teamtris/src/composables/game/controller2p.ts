@@ -2,7 +2,6 @@ import Game2P from "./game2p"
 import Controller from "./controller"
 
 class Controller2P extends Controller {
-    public game: Game2P
 
     constructor(game: Game2P){
         super(game)

@@ -262,6 +262,6 @@ function createLobby(lobby_list, hostsockid){
         this.gameReady = false
     }
 
-    let lobby = (generateLobbyCode(lobby_list), hostsockid)
+    let lobby = new Lobby(generateLobbyCode(lobby_list), hostsockid)
     return lobby
 }

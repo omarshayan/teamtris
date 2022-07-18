@@ -51,8 +51,8 @@
       }
     }
     else {
-    let game = new Game(configuration, renderer)
-    game.run()
+      let game = new Game(configuration, renderer)
+      game.run()
     }
 
   })
