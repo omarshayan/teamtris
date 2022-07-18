@@ -2,11 +2,10 @@
   import Game from '@/components/layouts/Game.vue'
 </script>
 <template>
-  <Game
-    :two-player="true"
+  <Game2P
     :is-host="true"
   >
-  </Game>
+  </Game2P>
 </template>
 <style scoped>
 @import '@/assets/game.css';

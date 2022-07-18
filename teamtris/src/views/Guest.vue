@@ -14,12 +14,11 @@
   const connectCode = store.state.lobby.code
 </script>
 <template>
-  <Game
-    :two-player="true"
+  <Game2P
     :is-host="false"
     :connectCode="connectCode"
   >
-  </Game>
+  </Game2P>
 </template>
 <style scoped>
 @import '@/assets/game.css';

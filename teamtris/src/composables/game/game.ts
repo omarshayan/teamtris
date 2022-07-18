@@ -3,6 +3,7 @@ import Renderer from "./graphics"
 import Controller from "./controller"
 import Engine from "./engine"
 import { ConfigState } from '@/store/config'
+import { count } from "console"
 
 
 
@@ -28,6 +29,7 @@ class Game {
     protected controller: Controller
     public config: ConfigState;
     protected renderer: Renderer
+    protected engine: Engine
     //protected UI: UI
 
 
@@ -44,32 +46,61 @@ class Game {
         this.player = this.bag.pop()
 
         this.renderer = renderer
+        this.engine = new Engine(this.logic.bind(this))
         //this.UI = gameUI
     }
 
     public async run() {
-        console.log('game runnning')
         await this.renderer.loadSprites()
 
-        const engine = new Engine(this.logic.bind(this))
-        engine.start()
+        console.log('game runnning')
+
+        this.engine.start()
+    }
+
+    public async stop() {
+        this.engine.stop()
+    }
+
+    public async destroy() {
+
     }
 
     public logic(clock: {[clk: string]: number}) {
         //all clock values come in with 1 frames dt at least
 
-        //if it's a new game, initialize clocks to 0
+        //if it's a new game, initialize clocks to 0, and play the countdown
         if(this.new){
-            clock.sd = 0
-            clock.grav = 0
-            clock.lockDelay = 0
-            clock.ar = 0
-            clock.dasL = 0
-            clock.dasR = 0
-            clock.game = 0
-            clock.dt = 0
+            console.log('coutndown clocK: ', clock.countdown)
+
+            // keep all clocks (except countdown) until countdown is finished
+            Object.entries(clock).forEach(([clk, val], index) => {
+                console.log("clock key :" , clk)
+                if(clk != 'countdown'){
+                    val = 0
+                }
+                else if (clk == 'countdown'){
+                    console.log('its countdown')
+                }
+            })
+
+            this.board.render(this.renderer)
+            // this.player.render("game", this.renderer, this.board)
+            this.bag.render(this.renderer, this.board)
+
+            let countdown = String(3 - Math.floor(clock.countdown))
+            if (countdown == '0'){
+                this.new = false
+
+            }
+            this.renderer.renderCountdown(countdown)
+
+            return clock
         }
-        this.new = false
+        else if(!this.new) {
+            clock.countdown = 0
+        }
+
 
         //poll controller
         this.controller.poll(this)
@@ -80,6 +111,7 @@ class Game {
             this.player = this.bag.pop()
         }
 
+        // check arr and das clocks 
         this.controller.countTics(clock, this)
 
         //render shit

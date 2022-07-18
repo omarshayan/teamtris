@@ -1,4 +1,5 @@
 import Renderer from '@/composables/renderer'
+import { withCtx } from 'vue'
 
 const spriteSheet = {
     //sprite index map
@@ -37,6 +38,8 @@ const spriteSheet = {
 class GameRenderer{
 
     protected contexts: {[id: string]: CanvasRenderingContext2D}
+
+    private countdown: string
     private gameRes: [width: number, height: number]
     private bagRes: [width: number, height: number]
     private spriteSize: number
@@ -55,6 +58,12 @@ class GameRenderer{
         this.bagRes = [canvases["bag"].width, canvases["bag"].height]
         this.spriteSize = 32
         this.previewSize = [this.spriteSize*5, this.spriteSize*3]
+
+        this.countdownCount = 3
+
+        this.contexts['game'].font = "60px Floppy Pixel Regular"
+        this.contexts['game'].fillStyle = 'white'
+        this.contexts['game'].textAlign = 'center'
     }
 
     public async loadSprites(){
@@ -116,6 +125,14 @@ class GameRenderer{
             coords[0]*mul, coords[1]*mul, mul, mul,
             x*mul, y*mul, mul, mul
             )
+    }
+
+    public async renderCountdown(count: string){
+        this.contexts['game'].fillStyle = 'black'
+        this.contexts['game'].fillText(String(this.countdown), this.gameRes[0]/2, this.gameRes[1]/2)
+        this.contexts['game'].fillStyle = 'white'
+        this.contexts['game'].fillText(String(count), this.gameRes[0]/2, this.gameRes[1]/2)
+        this.countdown = count
     }
 
     public clearPreview(previewLength: number){

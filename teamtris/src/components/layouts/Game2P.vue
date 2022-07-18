@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-  import { defineProps, onMounted, ref, reactive, onUnmounted } from 'vue'
+  import { defineProps, onMounted, ref, reactive } from 'vue'
 
   import Button from '@/components/elements/Button.vue'
 
@@ -9,7 +9,6 @@
   import P2P from '@/composables/game/p2p'
   import ConfigState from '@/store/config'
   import { useStore } from '@/store/store'
-import router from '@/router'
 
   const store = useStore()
 
@@ -26,23 +25,22 @@ import router from '@/router'
     game: null
   })
 
+  const props = defineProps<{
+    isHost?: boolean,
+    connectCode?: string,
+  }>()
   
   // events
   
 
-  let startGame = (game: Game) => {
-      console.log('startnig game...')
-      if(store.state.game.ready){
-        localstate.game.run()
-      }
-      else if (!store.state.game.ready){
-        console.error('game not ready!')
-      }
-  
+  let onLobbyJoin = (game: Game2P) => {
+      console.log('starting game!')
+      localstate.game.run()
   }
 
-  let goToMainMenu = () => {
-    router.push('/')
+  let startGame = (game: Game) => {
+      console.log('startnig game...')
+      localstate.game.run()
   }
 
   onMounted(() => {
@@ -57,15 +55,20 @@ import router from '@/router'
     const configuration = store.state.config
     const renderer = new Renderer(canvases)
 
-    localstate.game = new Game(configuration, renderer) as Game
-    store.commit('ready')
-    console.log('game ready!')
+
+    if (props.isHost != undefined) {
+      localstate.game = new Game2P(configuration, renderer, props.isHost)
+      const p2p = new P2P(props.isHost, localstate.game as Game2P, onLobbyJoin)
+      console.log("two player game")
+      if(props.isHost) {
+        p2p.setup(props.isHost, localstate.game as Game2P, onLobbyJoin)
+      }
+      else if (!props.isHost) { 
+        p2p.setup(props.isHost, localstate.game as Game2P, onLobbyJoin, props.connectCode)
+      }
+    }
   })
 
-  onUnmounted(() => {
-    console.log('unmounting game...')
-    localstate.game?.stop()
-  })
 
 </script>
 <template>
@@ -74,8 +77,6 @@ import router from '@/router'
         <canvas ref='holdCanvas' id='hold-canvas' :width='159' :height='96'></canvas>
         <p id=FPS>-1</p>
         <Button @on-click:button="startGame">start!</Button>
-        <Button @on-click:button="goToMainMenu">back</Button>
-
       </div>
 	    <canvas ref='boardCanvas' id='board-canvas' :width='319' :height='640'></canvas>
       <div class='r-ui'>

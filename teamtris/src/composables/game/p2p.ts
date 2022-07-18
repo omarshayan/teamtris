@@ -7,8 +7,7 @@ import wrtc from 'wrtc'
 import Message from "./messenger"
 import Game2P from "./game2p"
 
-import Manip_DOM from "./2p_dom"
-import gamePreviewRenderer from '../gamePreviewRenderer'
+import { GameState } from '@/store/game'
 
 export default class P2P {
 
@@ -19,7 +18,7 @@ export default class P2P {
     wssUrl: string
     onConnect: (game: Game2P) => void
 
-    constructor(isHost: boolean, game: Game2P,  onConnect: (game: Game2P) => void) {
+    constructor(isHost: boolean, game: Game2P, onConnect: (game: Game2P) => void) {
         this.game = game
         this.isHost = isHost
         this.onConnect = onConnect
@@ -43,7 +42,7 @@ export default class P2P {
     
         if(isHost){
 
-            this.Host(game, onConnect)
+            await this.Host(game, onConnect)
         }
     
         if(!isHost){
@@ -53,7 +52,7 @@ export default class P2P {
             if(!connectCode) {
                 console.error('guest is missing connect code')
             }
-            this.Guest(peer, game, onConnect, connectCode!)
+            await this.Guest(peer, game, onConnect, connectCode!)
     
         }
     }

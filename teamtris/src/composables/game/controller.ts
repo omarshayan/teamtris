@@ -19,21 +19,6 @@ class Controller {
         this.dasT = this.game.config.das * 0.001
         this.arT = this.game.config.arr * 0.001
         this.lockDelay = 2
-        if(sessionStorage["arr"]){
-            console.log("importing arr settings")
-            this.arT = Number(sessionStorage.getItem("arr"))/1000
-
-        }
-        if(sessionStorage["das"]){
-            console.log("importing das settings")
-            this.dasT = Number(sessionStorage.getItem("das"))*3.33/1000
-
-        }
-        if(sessionStorage["sdf"]){
-            console.log("importing sdf settings")
-            this.sdT = this.gravT/(Number(sessionStorage.getItem("sdf")))
-
-        }
     }
 
     public async initialize() {

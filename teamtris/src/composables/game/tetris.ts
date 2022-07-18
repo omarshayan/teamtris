@@ -537,13 +537,12 @@ export class Board {
 export class Bag {
 
     public queue: Tetrimino[]
-    private heldPiece: Tetrimino
+    private heldPiece: Tetrimino | undefined
     private previewLength: number
     public canHold: boolean
 
     constructor(){
         this.queue = this.shuffledBag(letters)
-        this.heldPiece = null
         this.canHold = true
         this.previewLength = 5
     }
