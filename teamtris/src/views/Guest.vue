@@ -1,6 +1,5 @@
 <script setup lang='ts'>
   import Game from '@/components/layouts/Game.vue'
-  import { defineProps} from 'vue';
   import { useStore } from '@/store/store'
 
   // props

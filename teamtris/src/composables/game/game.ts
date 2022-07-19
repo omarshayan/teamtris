@@ -5,6 +5,8 @@ import Engine from "./engine"
 import { ConfigState } from '@/store/config'
 import { count } from "console"
 
+import { Ref, ref, computed } from 'vue'
+import { runInThisContext } from "vm"
 
 
 
@@ -13,11 +15,8 @@ function drawMap(tileImage: HTMLImageElement) {
 
 class Game {
 
-    public activeTurn: boolean = true
+    public elapsedTime: number
 
-    private context: CanvasRenderingContext2D
-    private width: number
-    private height: number
     spriteSize: number
 
     public board: Board
@@ -30,10 +29,12 @@ class Game {
     public config: ConfigState;
     protected renderer: Renderer
     protected engine: Engine
+
     //protected UI: UI
+    public timer: Ref<Number | undefined>
 
-
-    constructor(config: ConfigState, renderer: Renderer) {
+    constructor(timer: Ref<Number | undefined>, config: ConfigState, renderer: Renderer) {
+        this.elapsedTime = 0
         this.config = config
         this.new = true
         this.spriteSize = 8
@@ -47,7 +48,17 @@ class Game {
 
         this.renderer = renderer
         this.engine = new Engine(this.logic.bind(this))
-        //this.UI = gameUI
+
+        // UI
+        this.timer = timer
+        
+    }
+
+    public getTimer(timer: Ref<Number | undefined>){
+        const time = computed(() =>{ 
+            this.elapsedTime
+        })
+        return time
     }
 
     public async run() {
@@ -71,19 +82,22 @@ class Game {
 
         //if it's a new game, initialize clocks to 0, and play the countdown
         if(this.new){
-            console.log('coutndown clocK: ', clock.countdown)
-
             // keep all clocks (except countdown) until countdown is finished
-            Object.entries(clock).forEach(([clk, val], index) => {
-                console.log("clock key :" , clk)
-                if(clk != 'countdown'){
-                    val = 0
-                }
-                else if (clk == 'countdown'){
-                    console.log('its countdown')
-                }
-            })
-
+            // Object.entries(clock).forEach(([clk, val], index) => {
+            //     if(clk != 'countdown'){
+            //         val = 0
+            //         console.log(clk, ': ', val)
+            //     }
+            // })
+            clock.sd = 0
+            clock.grav = 0
+            clock.lockDelay = 0
+            clock.ar = 0
+            clock.dasL = 0
+            clock.dasR = 0
+            clock.game = 0
+            clock.dt = 0
+    
             this.board.render(this.renderer)
             // this.player.render("game", this.renderer, this.board)
             this.bag.render(this.renderer, this.board)
@@ -91,16 +105,21 @@ class Game {
             let countdown = String(3 - Math.floor(clock.countdown))
             if (countdown == '0'){
                 this.new = false
+                console.log(clock)
 
             }
-            this.renderer.renderCountdown(countdown)
+            else{
+                this.renderer.renderCountdown(countdown)
+            }
 
             return clock
         }
         else if(!this.new) {
             clock.countdown = 0
-        }
+            this.elapsedTime = clock.game
+            this.timer.value = clock.game
 
+        }
 
         //poll controller
         this.controller.poll(this)

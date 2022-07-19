@@ -473,7 +473,6 @@ export class Board {
     }
 
     public render(renderer: Renderer) {
-        console.log('rendering board')
         for(let row = 0; row < this.rows; row++) {
             for(let col = 0; col < this.cols; col++){
                 renderer.renderSprite("game", this.cells[row][col], row, col)

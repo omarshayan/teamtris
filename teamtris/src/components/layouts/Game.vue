@@ -1,30 +1,44 @@
 <script setup lang='ts'>
-  import { defineProps, onMounted, ref, reactive, onUnmounted } from 'vue'
+  import { onMounted, ref, toRef, reactive, computed, watch, ComputedRef, onUnmounted } from 'vue'
 
   import Button from '@/components/elements/Button.vue'
 
   import Renderer from '@/composables/game/graphics'
   import Game from '@/composables/game/game'
-    import Game2P from '@/composables/game/game2p'
+  import Game2P from '@/composables/game/game2p'
   import P2P from '@/composables/game/p2p'
   import ConfigState from '@/store/config'
   import { useStore } from '@/store/store'
-import router from '@/router'
+  import router from '@/router'
+  import Timer from '@/components/elements/Timer.vue'
+  import LineCounter from '@/components/elements/LineCounter.vue'
+
 
   const store = useStore()
 
-
-
+  const timer = ref<number>()
+  let timeComputed: ComputedRef<void>
   const boardCanvas = ref<HTMLCanvasElement | null>(null)
   const holdCanvas = ref<HTMLCanvasElement | null>(null)
   const bagCanvas = ref<HTMLCanvasElement | null>(null)
 
   interface GameLocalState {
     game: Game | Game2P| null
+    time: number
   }
   const localstate: GameLocalState = reactive({
-    game: null
+    game: null,
+    time: 0
   })
+
+
+  // computed
+
+  const gameTime = computed(() => localstate.game?.elapsedTime)
+
+  function getElapsedTime() {
+    return localstate.game?.elapsedTime
+  }
 
   
   // events
@@ -42,7 +56,10 @@ import router from '@/router'
   }
 
   let goToMainMenu = () => {
-    router.push('/')
+    // router.push('/')
+        console.log('elapsed time from ref: ', timer.value) 
+        console.log('elapsed time from comptued: ', timeComputed.value)
+        console.log('elapsed time from localstate: ', localstate.game?.elapsedTime)
   }
 
   onMounted(() => {
@@ -53,11 +70,22 @@ import router from '@/router'
         'bag': bagCanvas.value!,
         'hold': holdCanvas.value!,
     }
-
     const configuration = store.state.config
     const renderer = new Renderer(canvases)
 
-    localstate.game = new Game(configuration, renderer) as Game
+    localstate.game = new Game(timer, configuration, renderer) as Game
+
+    timeComputed = localstate.game.getTimer(timer)
+    console.log('gametime : ' , gameTime)
+
+    // watcher
+
+    watch(
+      () => localstate.game?.elapsedTime, 
+      (time) => { console.log('watching time: ', time)},
+      {deep: true}
+    )
+
     store.commit('ready')
     console.log('game ready!')
   })
@@ -80,8 +108,7 @@ import router from '@/router'
 	    <canvas ref='boardCanvas' id='board-canvas' :width='319' :height='640'></canvas>
       <div class='r-ui'>
         <canvas ref='bagCanvas' id='bag-canvas' :width='159' :height ='480' ></canvas>
-        <h3 id=timer>0</h3>
-        <h3 id=line-counter>0/40</h3>
+        <Timer>{{ timer?.toFixed(3) }}</Timer>
       </div>
    </div>
 </template>

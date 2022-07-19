@@ -21,7 +21,7 @@
 <script setup>
     import { Store } from 'vuex'
     import { useStore }  from '@/store/store'
-    import InputSlider from "../elements/InputSlider.vue"
+    import SliderInput from "../elements/SliderInput.vue"
 
     const store = useStore()
     
@@ -47,7 +47,7 @@
     <div class='grid-container'>
         <div class='l-col'>
             <div class='grid-item'>
-                <InputSlider
+                <SliderInput
                     class='grid-item'
                     :maximum="100"
                     :minimum="1"
@@ -60,10 +60,10 @@
                    <template v-slot:unit-label>
                        ms
                    </template>
-                </InputSlider>
+                </SliderInput>
             </div>
             <div class='grid-item'>
-                <InputSlider
+                <SliderInput
                     class='grid-item'
                     :maximum="333"
                     :minimum="10"
@@ -77,10 +77,10 @@
                    <template v-slot:unit-label>
                        ms
                    </template>
-                </InputSlider>
+                </SliderInput>
             </div>
             <div class='grid-item'>
-                <InputSlider
+                <SliderInput
                     class='grid-item'
                     :maximum="333"
                     :minimum="0"
@@ -93,10 +93,10 @@
                    <template v-slot:unit-label>
                        ms
                    </template>
-                </InputSlider>
+                </SliderInput>
             </div>
             <div class='grid-item'>
-                <InputSlider
+                <SliderInput
                     class='grid-item'
                     :maximum="100"
                     :minimum="1"
@@ -109,7 +109,7 @@
                    <template v-slot:unit-label>
                        X
                    </template>
-                </InputSlider>
+                </SliderInput>
             </div>
         </div>
     </div>

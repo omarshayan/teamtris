@@ -2,9 +2,6 @@
     import {
         ref,
         reactive,
-        defineProps,
-        defineEmits,
-        defineExpose,
         onMounted,
     }   from 'vue'
     const input = ref(null)

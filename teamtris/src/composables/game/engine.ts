@@ -35,7 +35,6 @@ class Engine {
 
 
         this.lastTime = (new Date()).getTime()
-        console.log('next frame!')
 
         window.requestAnimationFrame(this.nextFrame.bind(this))
 
@@ -54,7 +53,6 @@ class Engine {
         const time = (new Date()).getTime()
         const dt = (time - this.lastTime) / 1000 //converting from ms to seconds, about 0.04
 
-        console.log('next frame : ', dt)
         // Object.entries(this.clock).forEach(([clk, val], index) => {
         //     val += dt
         // });

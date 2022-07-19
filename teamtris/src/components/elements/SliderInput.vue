@@ -2,7 +2,6 @@
     import {
         ref,
         onMounted,
-        defineProps
     }   from 'vue'
     import Slider from '../elements/Slider.vue'
     import Input from '../elements/Input.vue'
