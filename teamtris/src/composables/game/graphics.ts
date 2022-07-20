@@ -6,6 +6,7 @@ const spriteSheet = {
     //top left of sprite sheet is 0,0
     0: [0,0], //background sprite
     1: [0,1], //empty sprite
+    'X': [0,2], 
     'T': [3, 0],
     'I': [2, 0],
     'O': [4, 0],

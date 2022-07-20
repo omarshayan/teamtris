@@ -21,7 +21,7 @@ class Game {
     spriteSize: number
 
     public board: Board
-    public player: Tetrimino
+    public player: Tetrimino | null
     public bag: Bag
 
     protected new: boolean
@@ -73,7 +73,7 @@ class Game {
 
     }
 
-    public logic(clock: {[clk: string]: number}, requestId: number) {
+    public logic(clock: {[clk: string]: number}) {
         //all clock values come in with 1 frames dt at least
 
         //if it's a new game, initialize clocks to 0, and play the countdown
@@ -100,6 +100,7 @@ class Game {
 
             let countdown = String(3 - Math.floor(clock.countdown))
             if (countdown == '0'){
+                this.player = this.bag.pop()
                 this.new = false
                 console.log(clock)
 
@@ -117,11 +118,15 @@ class Game {
             this.lineCounter.value = this.board.linesCleared
         }
 
+        //render shit
+        this.board.render(this.renderer)
+        this.player.render("game", this.renderer, this.board)
+        this.bag.render(this.renderer, this.board)
+        
         // check if topped out
-
         if (this.board.toppedOut){
             this.stop()
-            return
+            return clock
         }
 
         //poll controller
@@ -136,10 +141,6 @@ class Game {
         // check arr and das clocks 
         this.controller.countTics(clock, this)
 
-        //render shit
-        this.board.render(this.renderer)
-        this.player.render("game", this.renderer, this.board)
-        this.bag.render(this.renderer, this.board)
 
         ////update UI
         //this.UI.updateTimer(clock.game)
@@ -150,11 +151,12 @@ class Game {
     }
 
     public reset() {
-        this.board = new Board(20, 10)
+        this.board = new Board(23, 10)
         this.bag = new Bag()
-        this.player = this.bag.pop()
+        this.player = null
         this.new = true
-
+        this.engine.stop()
+        this.engine.start()
     }
 }
 

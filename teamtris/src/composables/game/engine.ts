@@ -2,10 +2,10 @@ import { request } from "http"
 import Renderer from "./graphics"
 
 
-type GameLogic = (clock: {[clk: string]: number}, requestId: number | undefined) => {[clk: string]: number}
+type GameLogic = (clock: {[clk: string]: number}) => {[clk: string]: number}
 
 class Engine {
-    
+    private running: boolean
     private requestId: number | undefined
     private lastTime: number
     private renderer: Renderer
@@ -17,9 +17,12 @@ class Engine {
 
     constructor(gameLogic: GameLogic){
         this.gameLogic = gameLogic
+        this.running = false
     }
 
     public start() {
+        this.running = true
+
         this.gravityClock = 0
 
         this.clock.sd = 0
@@ -51,6 +54,7 @@ class Engine {
             console.log(this.requestId)
             window.cancelAnimationFrame(this.requestId)
             this.requestId = undefined
+            this.running = false
         }
         return
     }
@@ -76,9 +80,11 @@ class Engine {
 
         this.lastTime = time
 
-        this.clock = this.gameLogic(this.clock, this.requestId)
+        this.clock = this.gameLogic(this.clock)
 
-        this.requestId = window.requestAnimationFrame(this.nextFrame.bind(this))
+        if(this.running) {
+            this.requestId = window.requestAnimationFrame(this.nextFrame.bind(this))
+        }
     }
 }
 

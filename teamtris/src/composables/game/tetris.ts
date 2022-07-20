@@ -165,11 +165,19 @@ export class Tetrimino {
         for(let row = this.pos[0]; row < board.rows; row++) {
             if(!board.checkCollision(this, [row - this.pos[0], 0]) &&
                 board.checkCollision(this, [row - this.pos[0] + 1, 0])){
+
+                let spriteId = this.letter + "_shadow"
+                //check if piece would cause top over:
+                for (let y = 0; y < this.size; y++) {
+                    if (this.shape[y].indexOf(1) > -1 && row + y < 3) {
+                       spriteId = 'X' 
+                    }
+                }
                 for(let x = 0; x < this.size; x++) {
                     for(let y = 0; y < this.size; y++){
                         if(this.shape[y][x] == 1)
 
-                        renderer.renderSprite(contextId, this.letter + "_shadow", row + y, this.pos[1] + x)
+                        renderer.renderSprite(contextId, spriteId, row + y, this.pos[1] + x)
                     }
                 }
                 row = board.rows + 1
