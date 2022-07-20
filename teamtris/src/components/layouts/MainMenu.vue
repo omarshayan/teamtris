@@ -101,11 +101,13 @@
                     <template #menu-item-label>about</template>
                 </MenuButton>
                 <Input
+                    class="grid-item"
                     :maxlength="4"
                     :regex="alphaNumeric"
                     :height="80"
-                    :style="{ width: 256 }"
+                    :width="256"
                     @onSubmit:input="onConnectCodeSubmit"
+                    :sidebar="true"
                 ></Input>
             </div>
         </div>

@@ -142,6 +142,7 @@ export class Tetrimino {
     autorepeat: boolean
     public lock_clock: number
     public canSD: boolean
+    
 
     constructor(letter: string, pos: [number, number] = [0, 3]) {
         this.letter = letter
@@ -408,15 +409,20 @@ export class Tetrimino {
         for(let x = 0; x < this.size; x++) {
             for(let y = 0; y < this.size; y++){
                 if(this.shape[y][x] == 1){
-                    let temp = this.letter
-                    let temp2 = board.cells
-                    temp2[this.pos[0] + y][this.pos[1] + x] = temp
-                    board.cells = temp2
+                    let letterToPlace = this.letter
+                    let newBoard = board.cells
+                    newBoard[this.pos[0] + y][this.pos[1] + x] = letterToPlace
+                    board.cells = newBoard 
                 }
             }
         }
         this.placed = true
+
+
+
         board.clearLines()
+        
+        board.checkToppedOut()
     }
 
     public resetPos() {
@@ -433,11 +439,14 @@ export class Board {
     cells: any[][]
     linesCleared: number
 
+    public toppedOut: boolean
+
     constructor(rows: number, cols: number){
         this.cols = cols
         this.rows = rows
         this.linesCleared = 0
 
+        this.toppedOut = false
 
         //initialize cells as empty
         // this.cells = [];
@@ -447,7 +456,10 @@ export class Board {
         //         this.cells[rows][cols] = 0
         //     }
         // }
-        this.cells = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        this.cells = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -475,7 +487,7 @@ export class Board {
     public render(renderer: Renderer) {
         for(let row = 0; row < this.rows; row++) {
             for(let col = 0; col < this.cols; col++){
-                renderer.renderSprite("game", this.cells[row][col], row, col)
+                renderer.renderSprite("game", String(this.cells[row][col]), row, col)
             }
         }
     }
@@ -487,7 +499,8 @@ export class Board {
                 if(player.shape[y][x] == 1){
                     if(player.pos[0] + y + dir[0] >= this.rows ||
                     //    player.pos[1] + x >= this.cols ||
-                       this.cells[player.pos[0] + y + dir[0]][player.pos[1] + x + dir[1]] != 0) {
+                       (this.cells[player.pos[0] + y + dir[0]][player.pos[1] + x + dir[1]] != 0 &&
+                       this.cells[player.pos[0] + y + dir[0]][player.pos[1] + x + dir[1]] != 1)) {
                         return true
 
                     }
@@ -496,7 +509,16 @@ export class Board {
         }
         return false
     }
-
+    public checkToppedOut() {
+        // check for top over
+        for (let row = 0; row < 3; row++) {
+            for (let col = 0; col < this.cols; col ++) {
+                if (this.cells[row][col] != 1) {
+                    this.toppedOut = true
+                }
+            } 
+        }        
+    }
     public inBounds(player: Tetrimino, dir: [dy: number, dx: number]=[0,0]): boolean{
         for(let x = 0; x < player.size; x++) {
             for(let y = 0; y < player.size; y++){
@@ -512,14 +534,14 @@ export class Board {
 
     public clearLines() {
         var linesCleared = 0
-        for(let row = this.rows - 1; row >= 0; row--) {
+        for(let row = this.rows - 1; row >= 3; row--) {
             if(this.cells[row].indexOf(0) === -1){
-                for(let rowAbove = row; rowAbove > 0; rowAbove--){
+                for(let rowAbove = row; rowAbove > 3; rowAbove--){
                     let temp = this.cells[rowAbove - 1]
                     this.cells[rowAbove] = temp
                 }
                 let emptyRow = blankRow
-                this.cells[0] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                this.cells[0] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
                 row++
                 linesCleared++
             }

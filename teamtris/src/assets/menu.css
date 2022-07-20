@@ -44,10 +44,11 @@
 
 .sidebar {
     height: 60px;
+    width: 256px;
 }
 
 .input {
-    width: 256;
+    width: 256px;
 }
 
 .label {
@@ -70,6 +71,7 @@
     animation-name: hover;
     animation-fill-mode: forwards;
 }
+
 @keyframes hover {
     from {
         left: 0;

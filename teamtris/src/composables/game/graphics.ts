@@ -5,6 +5,7 @@ const spriteSheet = {
     //sprite index map
     //top left of sprite sheet is 0,0
     0: [0,0], //background sprite
+    1: [0,1], //empty sprite
     'T': [3, 0],
     'I': [2, 0],
     'O': [4, 0],
@@ -121,6 +122,13 @@ class GameRenderer{
         const coords = spriteSheet[spriteId]
         const mul = this.spriteSize
 
+        if (spriteId == '1') {
+            console.log('clearing empty sprite at: ', coords[0], ', ', coords[1])
+            this.contexts["game"].clearRect(
+                x*mul, y*mul, mul, mul,
+            )
+            return
+        }
         this.contexts["game"].drawImage(this.sprites,
             coords[0]*mul, coords[1]*mul, mul, mul,
             x*mul, y*mul, mul, mul

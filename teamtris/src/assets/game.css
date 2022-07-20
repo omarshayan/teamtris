@@ -58,6 +58,13 @@ form {
     flex-direction: column;
 }
 
+.timer {
+    display: block;
+}
+
+.line-counter {
+    display: block;
+}
 
 .r-ui {
     display: flex;
@@ -65,6 +72,7 @@ form {
 }
 
 #stats-box {
+    display: block;
     padding: 10px;
     margin-left: 10px;
     border-style: white;

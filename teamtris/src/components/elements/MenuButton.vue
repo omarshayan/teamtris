@@ -17,6 +17,7 @@
                     const newGameButtonRenderer = new gamePreviewRenderer(canvas)
                     newGameButtonRenderer.renderMenu()
                 }
+                console.log('width should be: ' , props.width)
             })
         },
         data() {
@@ -30,7 +31,7 @@
         @click="$emit('menuButtonOnClick')"
         @mouseover="hover = true; $emit('menuButtonMouseOver')"
         @mouseleave="hover = false; $emit('menuButtonMouseLeave')"
-        :height='height'
+        :style="{height: height, width: width}"
         :class="{'sidebar': sidebar, 'route-btn': true, 'hover': hover}"
     >
         <canvas v-if="!sidebar" id='new-game-preview' :width="width" :height="height"></canvas>

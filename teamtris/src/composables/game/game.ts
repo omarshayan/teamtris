@@ -43,7 +43,7 @@ class Game {
 
         this.controller = new Controller(this)
         this.controller.initialize()
-        this.board = new Board(20, 10)
+        this.board = new Board(23, 10)
         console.log('this board is ', this.board)
         this.bag = new Bag()
         this.player = this.bag.pop()
@@ -64,15 +64,16 @@ class Game {
         this.engine.start()
     }
 
-    public async stop() {
-        this.engine.stop()
+    public async stop(requestId?: number) {
+        requestId ? this.engine.stop(requestId) : this.engine.stop()
+        return
     }
 
     public async destroy() {
 
     }
 
-    public logic(clock: {[clk: string]: number}) {
+    public logic(clock: {[clk: string]: number}, requestId: number) {
         //all clock values come in with 1 frames dt at least
 
         //if it's a new game, initialize clocks to 0, and play the countdown
@@ -114,6 +115,13 @@ class Game {
             this.elapsedTime = clock.game
             this.timer.value = clock.game
             this.lineCounter.value = this.board.linesCleared
+        }
+
+        // check if topped out
+
+        if (this.board.toppedOut){
+            this.stop()
+            return
         }
 
         //poll controller

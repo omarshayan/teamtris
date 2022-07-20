@@ -2,7 +2,7 @@ import { request } from "http"
 import Renderer from "./graphics"
 
 
-type GameLogic = (clock: {[clk: string]: number}) => {[clk: string]: number}
+type GameLogic = (clock: {[clk: string]: number}, requestId: number | undefined) => {[clk: string]: number}
 
 class Engine {
     
@@ -40,12 +40,19 @@ class Engine {
 
     }
 
-    public stop() {
+    public stop(requestId?: number) {
+        // if (requestId) {
+        //     console.log('stopping game with passed request id')
+        //     window.cancelAnimationFrame(requestId)
+        //     r
+        // }
         if (this.requestId){
             console.log('stopping game..')
+            console.log(this.requestId)
             window.cancelAnimationFrame(this.requestId)
             this.requestId = undefined
         }
+        return
     }
     
 
@@ -69,7 +76,7 @@ class Engine {
 
         this.lastTime = time
 
-        this.clock = this.gameLogic(this.clock)
+        this.clock = this.gameLogic(this.clock, this.requestId)
 
         this.requestId = window.requestAnimationFrame(this.nextFrame.bind(this))
     }

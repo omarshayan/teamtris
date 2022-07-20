@@ -4,7 +4,9 @@
     })
 </script>
 <template>
-    <span id='container'><slot></slot><div>/{{String(total)}}</div></span>
+    <div id='container'>
+        <slot></slot><div>/{{String(total)}}</div>
+    </div>
 </template>
 <style scoped>
 slot {

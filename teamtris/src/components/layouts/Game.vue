@@ -45,10 +45,8 @@
   function getElapsedTime() {
     return localstate.game?.elapsedTime
   }
-
   
   // events
-  
 
   let startGame = (game: Game) => {
       console.log('startnig game...')
@@ -97,12 +95,13 @@
         <Button :style="{ margin: '10px' }" @on-click:button="goToMainMenu">back</Button>
 
       </div>
-	    <canvas ref='boardCanvas' id='board-canvas' :width='319' :height='640'></canvas>
+	    <canvas ref='boardCanvas' id='board-canvas' :width='320' :height='736'></canvas>
       <div class='r-ui'>
         <canvas ref='bagCanvas' id='bag-canvas' :width='159' :height ='480' ></canvas>
-        <div id='stats-box'></div>
-        <Timer>{{ timer?.toFixed(3) }}</Timer>
-        <LineCounter :total="numLines">{{ lineCounter }}</LineCounter>
+        <div id='stats-box'>
+          <Timer class='timer'>{{ timer?.toFixed(3) }}</Timer>
+          <LineCounter class='line-counter' :total="numLines">{{ lineCounter }}</LineCounter>
+        </div>
       </div>
    </div>
 </template>
