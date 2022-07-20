@@ -51,12 +51,22 @@ form {
     justify-content: center;
 }
 
+
+/* game UI */
 .l-ui {
     display: flex;
     flex-direction: column;
 }
 
+
 .r-ui {
     display: flex;
     flex-direction: column;
+}
+
+#stats-box {
+    padding: 10px;
+    margin-left: 10px;
+    border-style: white;
+    border-width: 2px;
 }

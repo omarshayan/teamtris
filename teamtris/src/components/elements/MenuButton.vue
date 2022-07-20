@@ -40,5 +40,15 @@
     </div>
 </template>
 <style>
-@import '@/assets/menu.css'
+    @import '@/assets/menu.css';
+    @font-face {
+    font-family: 'Floppy Pixel Regular';
+    src: url('/src/assets/fonts/Floppy Pixel Regular');
+    src: url('/src/assets/fonts/Floppy\ Pixel\ Regular.eot') format('embedded-opentype'),
+         url('/src/assets/fonts/FloppyPixelRegular.woff') format('woff'),
+         url('/src/assets/fonts/Floppy\ Pixel\ Regular.ttf') format('truetype'),
+         url('/src/assets/fonts/Floppy\ Pixel\ Regular.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+   }
 </style>

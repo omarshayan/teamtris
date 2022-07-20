@@ -9,7 +9,7 @@ export interface ConfigState {
 
 export default {
     state: () => ({
-       arr: 100,
+       arr: 2,
        das: 100,
        dcf: 100,
        sdf: 1,

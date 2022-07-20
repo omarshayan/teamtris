@@ -15,6 +15,7 @@ function drawMap(tileImage: HTMLImageElement) {
 
 class Game {
 
+    public activeTurn: boolean = true
     public elapsedTime: number
 
     spriteSize: number
@@ -30,10 +31,11 @@ class Game {
     protected renderer: Renderer
     protected engine: Engine
 
-    //protected UI: UI
     public timer: Ref<Number | undefined>
+    public lineCounter: Ref<Number | undefined>
 
-    constructor(timer: Ref<Number | undefined>, config: ConfigState, renderer: Renderer) {
+
+    constructor(timer: Ref<Number | undefined>, lineCounter: Ref<Number | undefined>, config: ConfigState, renderer: Renderer) {
         this.elapsedTime = 0
         this.config = config
         this.new = true
@@ -51,14 +53,7 @@ class Game {
 
         // UI
         this.timer = timer
-        
-    }
-
-    public getTimer(timer: Ref<Number | undefined>){
-        const time = computed(() =>{ 
-            this.elapsedTime
-        })
-        return time
+        this.lineCounter = lineCounter 
     }
 
     public async run() {
@@ -118,7 +113,7 @@ class Game {
             clock.countdown = 0
             this.elapsedTime = clock.game
             this.timer.value = clock.game
-
+            this.lineCounter.value = this.board.linesCleared
         }
 
         //poll controller

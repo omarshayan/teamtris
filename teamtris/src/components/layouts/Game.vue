@@ -13,10 +13,16 @@
   import Timer from '@/components/elements/Timer.vue'
   import LineCounter from '@/components/elements/LineCounter.vue'
 
+  // props
+
+  const props = defineProps({
+    numLines: Number
+  })
 
   const store = useStore()
 
   const timer = ref<number>()
+  const lineCounter = ref<number>()
   let timeComputed: ComputedRef<void>
   const boardCanvas = ref<HTMLCanvasElement | null>(null)
   const holdCanvas = ref<HTMLCanvasElement | null>(null)
@@ -56,10 +62,7 @@
   }
 
   let goToMainMenu = () => {
-    // router.push('/')
-        console.log('elapsed time from ref: ', timer.value) 
-        console.log('elapsed time from comptued: ', timeComputed.value)
-        console.log('elapsed time from localstate: ', localstate.game?.elapsedTime)
+    router.push('/')
   }
 
   onMounted(() => {
@@ -73,18 +76,7 @@
     const configuration = store.state.config
     const renderer = new Renderer(canvases)
 
-    localstate.game = new Game(timer, configuration, renderer) as Game
-
-    timeComputed = localstate.game.getTimer(timer)
-    console.log('gametime : ' , gameTime)
-
-    // watcher
-
-    watch(
-      () => localstate.game?.elapsedTime, 
-      (time) => { console.log('watching time: ', time)},
-      {deep: true}
-    )
+    localstate.game = new Game(timer, lineCounter, configuration, renderer) as Game
 
     store.commit('ready')
     console.log('game ready!')
@@ -101,14 +93,16 @@
       <div class='l-ui'>
         <canvas ref='holdCanvas' id='hold-canvas' :width='159' :height='96'></canvas>
         <p id=FPS>-1</p>
-        <Button @on-click:button="startGame">start!</Button>
-        <Button @on-click:button="goToMainMenu">back</Button>
+        <Button :style="{ margin: '10px' }" @on-click:button="startGame">start!</Button>
+        <Button :style="{ margin: '10px' }" @on-click:button="goToMainMenu">back</Button>
 
       </div>
 	    <canvas ref='boardCanvas' id='board-canvas' :width='319' :height='640'></canvas>
       <div class='r-ui'>
         <canvas ref='bagCanvas' id='bag-canvas' :width='159' :height ='480' ></canvas>
+        <div id='stats-box'></div>
         <Timer>{{ timer?.toFixed(3) }}</Timer>
+        <LineCounter :total="numLines">{{ lineCounter }}</LineCounter>
       </div>
    </div>
 </template>

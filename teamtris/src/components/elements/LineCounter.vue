@@ -4,5 +4,16 @@
     })
 </script>
 <template>
-    <span><slot></slot>/{{total}}</span>
+    <span id='container'><slot></slot><div>/{{String(total)}}</div></span>
 </template>
+<style scoped>
+slot {
+    display: inline;
+    font-size: 30px;
+}
+
+div {
+    display: inline;
+    font-size: 23px
+}
+</style>

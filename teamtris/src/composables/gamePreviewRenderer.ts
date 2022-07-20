@@ -21,12 +21,12 @@ export default class gamePreviewRenderer extends Renderer {
     public async renderMenu(){
         await this.loadImages()
         await this.context.drawImage(this.tempBackground!, 0, 0, 256, 512)
-        this.context.font = "60px Floppy Pixel Regular"
-        this.context.fillStyle='white'
-        this.context.fillText('host a', 64, 50)
-        this.context.fillText('new game', 32, 100)
-
+        let font_file = new FontFace('Floppy Pixel Regular', 'url(src/assets/fonts/FloppyPixelRegular.woff)')
+        font_file.load().then( () => {            
+            this.context.font = "60px Floppy Pixel Regular"
+            this.context.fillStyle='white'
+            this.context.fillText('host a', 64, 50)
+            this.context.fillText('new game', 32, 100)
+        })
     }
-
-
 }
