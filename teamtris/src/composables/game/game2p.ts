@@ -133,9 +133,9 @@ class Game2P extends Game {
                     this.engine.start()
                 }
 
-                //recieve player position 
+                //recieve player position
                 if(dataObj.metadata == "player position"){
-                    // console.log('recieved player pos: ' ,dataObj.y) 
+                    // console.log('recieved player pos: ' ,dataObj.y)
                     // console.log('math trunc: ', Math.trunc(dataObj.y))
                     if(this.player && !this.activeTurn) {
                         this.remotePlayerStateQueue.push([Math.trunc(dataObj.y), Math.trunc(dataObj.x), Math.trunc(dataObj.orientation)])
@@ -151,7 +151,7 @@ class Game2P extends Game {
                         this.player.orientation = Math.trunc(dataObj.orientation)
                     }
                     this.player.place(this.board)
-    
+
                     this.bag.canHold = true
                     this.player = this.bag.pop()
 
@@ -197,10 +197,6 @@ class Game2P extends Game {
         if(this.player.placed == true){
             let placedposx = this.player.pos[1]
             let placedposy = this.player.pos[0]
-
-            this.bag.canHold = true
-            this.player = this.bag.pop()
-
 
             this.activeTurn = false
 
