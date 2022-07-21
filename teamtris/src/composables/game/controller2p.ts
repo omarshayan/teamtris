@@ -1,5 +1,6 @@
 import Game2P from "./game2p"
 import Controller from "./controller"
+import Clock from './types/clock'
 
 class Controller2P extends Controller {
 
@@ -134,7 +135,7 @@ class Controller2P extends Controller {
 
     }
 
-    public countTics(clock: {[clk: string]: number}, game: Game2P){
+    public countTics(clock: Clock, game: Game2P){
 
         //das left
         if (!this.keyStates["ArrowLeft"] || this.keyStates["ArrowRight"]){

@@ -5,12 +5,14 @@ import Engine from "./engine"
 import { ConfigState } from '@/store/config'
 import { count } from "console"
 
-import { Ref, ref, computed } from 'vue'
+import { Ref } from 'vue'
 import { runInThisContext } from "vm"
+import Clock from './types/clock'
 
-
-
-function drawMap(tileImage: HTMLImageElement) {
+const constants = {
+    countdown: 1,
+    height: 23,
+    width: 10
 }
 
 class Game {
@@ -21,7 +23,7 @@ class Game {
     spriteSize: number
 
     public board: Board
-    public player: Tetrimino | null
+    public player: Tetrimino
     public bag: Bag
 
     protected new: boolean
@@ -31,11 +33,11 @@ class Game {
     protected renderer: Renderer
     protected engine: Engine
 
-    public timer: Ref<Number | undefined>
-    public lineCounter: Ref<Number | undefined>
+    public timer: Ref<number | undefined>
+    public lineCounter: Ref<number | undefined>
 
 
-    constructor(timer: Ref<Number | undefined>, lineCounter: Ref<Number | undefined>, config: ConfigState, renderer: Renderer) {
+    constructor(timer: Ref<number | undefined>, lineCounter: Ref<number | undefined>, config: ConfigState, renderer: Renderer) {
         this.elapsedTime = 0
         this.config = config
         this.new = true
@@ -44,19 +46,22 @@ class Game {
         this.controller = new Controller(this)
         this.controller.initialize()
         this.board = new Board(23, 10)
-        console.log('this board is ', this.board)
         this.bag = new Bag()
         this.player = this.bag.pop()
-
-        this.renderer = renderer
-        this.engine = new Engine(this.logic.bind(this))
 
         // UI
         this.timer = timer
         this.lineCounter = lineCounter 
+
+        this.renderer = renderer
+        this.initializeEngine()
     }
 
-    public async run() {
+    public initializeEngine(){
+        this.engine = new Engine(this.logic.bind(this))
+    }
+
+    public async start() {
         await this.renderer.loadSprites()
 
         console.log('game runnning')
@@ -65,7 +70,7 @@ class Game {
     }
 
     public async stop(requestId?: number) {
-        requestId ? this.engine.stop(requestId) : this.engine.stop()
+        this.engine.stop()
         return
     }
 
@@ -73,7 +78,7 @@ class Game {
 
     }
 
-    public logic(clock: {[clk: string]: number}) {
+    public logic(clock: Clock)  {
         //all clock values come in with 1 frames dt at least
 
         //if it's a new game, initialize clocks to 0, and play the countdown
@@ -98,9 +103,8 @@ class Game {
             // this.player.render("game", this.renderer, this.board)
             this.bag.render(this.renderer, this.board)
 
-            let countdown = String(3 - Math.floor(clock.countdown))
+            let countdown = String(constants.countdown - Math.floor(clock.countdown))
             if (countdown == '0'){
-                this.player = this.bag.pop()
                 this.new = false
                 console.log(clock)
 
@@ -129,9 +133,6 @@ class Game {
             return clock
         }
 
-        //poll controller
-        this.controller.poll(this)
-
         //check if a piece was placed
         if(this.player.placed == true){
             this.bag.canHold = true
@@ -139,7 +140,10 @@ class Game {
         }
 
         // check arr and das clocks 
-        this.controller.countTics(clock, this)
+        if(this.activeTurn && !this.new){
+            this.controller.countTics(clock, this)
+        }
+
 
 
         ////update UI
@@ -153,10 +157,9 @@ class Game {
     public reset() {
         this.board = new Board(23, 10)
         this.bag = new Bag()
-        this.player = null
+        this.player = this.bag.pop()
         this.new = true
-        this.engine.stop()
-        this.engine.start()
+
     }
 }
 

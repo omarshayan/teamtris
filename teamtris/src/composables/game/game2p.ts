@@ -1,3 +1,5 @@
+import { Ref } from 'vue'
+
 import { Tetrimino, Board, Bag} from "./tetris"
 import Renderer from "./graphics"
 import Controller2P from "./controller2p"
@@ -7,12 +9,13 @@ import SimplePeer from 'simple-peer'
 import Game from "./game"
 import { ConfigState } from '@/store/config'
 import Message from "./messenger"
-import { runInThisContext } from "vm"
-import { urlToHttpOptions } from "url"
+import Clock from './types/clock'
+import { Console } from 'console'
 
 
-
-
+const constants = {
+    remotePlayerStateQueueSize: 5
+}
 function drawMap(tileImage: HTMLImageElement) {
 }
 class Game2P extends Game {
@@ -22,8 +25,8 @@ class Game2P extends Game {
     role: string
     remotePlayerStateQueue: [y: number, x: number, orientation: number][]
 
-    constructor(config: ConfigState, renderer: Renderer, isHost: boolean){
-        super(config, renderer)
+    constructor(timer: Ref<number | undefined>, lineCounter: Ref<number | undefined>, config: ConfigState, renderer: Renderer, isHost: boolean){
+        super(timer, lineCounter, config, renderer)
         if(isHost){
             this.activeTurn = true
             this.role = "host"
@@ -37,16 +40,20 @@ class Game2P extends Game {
 
     }
 
+    public initializeEngine(): void {
+        this.engine = new Engine(this.logic2P.bind(this))
+    }
+
     public providePeer(peer: SimplePeer.Instance) {
         this.peer = peer
     }
 
-    public async run() {
+    public async start() {
 
         if(this.isHost){
             this.controller = new Controller2P(this)
             this.controller.initialize()
-            this.board = new Board(20, 10)
+            this.board = new Board(23, 10)
             this.bag = new Bag()
 
             this.peer.on("data", data => {
@@ -54,6 +61,7 @@ class Game2P extends Game {
 
                 if(dataObj.metadata == "player position"){
                     // if(this.player) this.player.pos = [Math.trunc(dataObj.y), Math.trunc(dataObj.x)]
+                    console.log('recieved player positoin')
                     if(this.player) this.remotePlayerStateQueue.push([Math.trunc(dataObj.y), Math.trunc(dataObj.x), Math.trunc(dataObj.orientation)])
 
                 }
@@ -96,14 +104,14 @@ class Game2P extends Game {
             await this.renderer.loadSprites()
 
 
-
-            const engine = new Engine(this.logic.bind(this))
-            engine.start()
+            this.engine.start()
         }
 
-        if(!this.isHost){
+    }
+    public waitForStart= () => {
 
-            this.peer.on("data", data => {
+            this.renderer.loadSprites()
+             this.peer.on("data", data => {
                 let dataObj = JSON.parse(data)
 
 
@@ -115,21 +123,23 @@ class Game2P extends Game {
                     console.log(dataObj.content)
                     this.controller = new Controller2P(this)
                     this.controller.initialize()
-                    this.board = new Board(20, 10)
+                    this.board = new Board(23, 10)
 
                     this.bag = new Bag()
 
                     this.bag.queue = (dataObj.content.split(",")).map(letter => new Tetrimino(letter))
 
                     this.player = this.bag.pop()
-                    this.renderer.loadSprites()
-                    const engine = new Engine(this.logic.bind(this))
-                    engine.start()
+                    this.engine.start()
                 }
 
-                //recieve player position
+                //recieve player position 
                 if(dataObj.metadata == "player position"){
-                    if(this.player && !this.activeTurn) this.remotePlayerStateQueue.push([Math.trunc(dataObj.y), Math.trunc(dataObj.x), Math.trunc(dataObj.orientation)])
+                    // console.log('recieved player pos: ' ,dataObj.y) 
+                    // console.log('math trunc: ', Math.trunc(dataObj.y))
+                    if(this.player && !this.activeTurn) {
+                        this.remotePlayerStateQueue.push([Math.trunc(dataObj.y), Math.trunc(dataObj.x), Math.trunc(dataObj.orientation)])
+                    }
                 }
 
                 //recieve player piece drop signal
@@ -141,7 +151,7 @@ class Game2P extends Game {
                         this.player.orientation = Math.trunc(dataObj.orientation)
                     }
                     this.player.place(this.board)
-
+    
                     this.bag.canHold = true
                     this.player = this.bag.pop()
 
@@ -157,54 +167,31 @@ class Game2P extends Game {
             })
         }
 
-    }
+    public logic2P(clock: Clock) {
 
-    public logic(clock: {[clk: string]: number}) {
-
-
-        if(this.activeTurn){
+        console.log("turn: " , this.activeTurn , '\t new? : ', this.new)
+        if(this.activeTurn && !this.new){
             let player_pos = {
                 metadata: "player position",
                 x: this.player.pos[1],
                 y: this.player.pos[0],
                 orientation: this.player.orientation
             }
-
-
+            console.log('sending pos ', player_pos)
             this.peer.send(JSON.stringify(player_pos))
         }
-
-        //all clock values come in with 1 frames dt at least
-
-
-        //if it's a new game or turn, initialize clocks to 0
-        if(this.new){
-            clock.sd = 0
-            clock.grav = 0
-            clock.lockDelay = 0
-            clock.ar = 0
-            clock.dasL = 0
-            clock.dasR = 0
-            clock.game = 0
-            clock.dt = 0
-        }
-        this.new = false
-
-
-        //poll controller
-        if(this.activeTurn){
-            this.controller.poll(this)
-        }
-        else if(!this.activeTurn){
+        if(!this.new && !this.activeTurn){
             if(this.remotePlayerStateQueue.length > 0) {
+                this.remotePlayerStateQueue = this.remotePlayerStateQueue.slice(0, 10)
+                console.log('remotePlayerStateQueue: ', this.remotePlayerStateQueue)
                 let remotePlayerState = this.remotePlayerStateQueue.shift()
+                // console.log('setting position from remote', remotePlayerState)
                 this.player.pos = [remotePlayerState[0], remotePlayerState[1]]
                 this.player.orientation = remotePlayerState[2]
                 this.player.shape = this.player.rotations[this.player.orientation]
 
             }
         }
-
 
         //check if a piece was placed
         if(this.player.placed == true){
@@ -228,28 +215,10 @@ class Game2P extends Game {
             }
 
             this.peer.send(JSON.stringify(piece_dropped))
-
-
-
         }
 
-        if(this.activeTurn){
-            this.controller.countTics(clock, this)
-
-        }
-
-        //render shit
-        this.board.render(this.renderer)
-        this.player.render("game", this.renderer, this.board)
-        this.bag.render(this.renderer, this.board)
-
-        //update UI
-        // this.UI.updateTimer(clock.game)
-        // this.UI.updateLinesCleared(this.board.linesCleared)
-        // this.UI.updateFPS(clock.dt)
-        // this.UI.updateTurn(this.activeTurn)
-
-        return clock
+        const newClock: Clock = this.logic(clock)
+        return newClock
     }
 
 

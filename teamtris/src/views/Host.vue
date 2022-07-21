@@ -1,8 +1,9 @@
 <script setup lang='ts'>
-  import Game from '@/components/layouts/Game.vue'
+  import Game2P from '@/components/layouts/Game2P.vue'
 </script>
 <template>
   <Game2P
+    :num-lines="40"
     :is-host="true"
   >
   </Game2P>

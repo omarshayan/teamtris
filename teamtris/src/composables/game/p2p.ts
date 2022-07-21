@@ -48,6 +48,7 @@ export default class P2P {
         if(!isHost){
             let peer = new SimplePeer({wrtc: wrtc, trickle: false})
             this.peer = peer
+            
             console.log('connectcode: ', connectCode)
             if(!connectCode) {
                 console.error('guest is missing connect code')
@@ -192,6 +193,7 @@ export default class P2P {
                 })
                 peer.on('data', (data: any) => {
                     game.providePeer(peer)
+                    game.waitForStart()
                     onConnect(game)
     
                 })

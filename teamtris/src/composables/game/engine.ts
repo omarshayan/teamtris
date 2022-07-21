@@ -1,8 +1,8 @@
 import { request } from "http"
 import Renderer from "./graphics"
+import Clock from './types/clock'
 
-
-type GameLogic = (clock: {[clk: string]: number}) => {[clk: string]: number}
+type GameLogic = (clock: Clock) => Clock
 
 class Engine {
     private running: boolean
@@ -13,37 +13,34 @@ class Engine {
 
     private gravityClock: number
 
-    private clock: {[clk: string]: number} = {}
+    private clock: Clock
 
     constructor(gameLogic: GameLogic){
         this.gameLogic = gameLogic
         this.running = false
+        this.clock = {
+            sd: 0,
+            grav: 0,
+            lockDelay: 0,
+            ar: 0,
+            dasL: 0,
+            dasR: 0,
+            game: 0,
+            countdown: 0,
+            dt: 0,
+        }
     }
 
     public start() {
         this.running = true
-
         this.gravityClock = 0
-
-        this.clock.sd = 0
-        this.clock.grav = 0
-        this.clock.lockDelay = 0
-        this.clock.ar = 0
-        this.clock.dasL = 0
-        this.clock.dasR = 0
-        this.clock.game = 0
-        this.clock.countdown = 0
-        this.clock.dt = 0
-
-
-
         this.lastTime = (new Date()).getTime()
 
         window.requestAnimationFrame(this.nextFrame.bind(this))
 
     }
 
-    public stop(requestId?: number) {
+    public stop() {
         // if (requestId) {
         //     console.log('stopping game with passed request id')
         //     window.cancelAnimationFrame(requestId)

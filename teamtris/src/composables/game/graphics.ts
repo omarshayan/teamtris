@@ -124,7 +124,6 @@ class GameRenderer{
         const mul = this.spriteSize
 
         if (spriteId == '1') {
-            console.log('clearing empty sprite at: ', coords[0], ', ', coords[1])
             this.contexts["game"].clearRect(
                 x*mul, y*mul, mul, mul,
             )

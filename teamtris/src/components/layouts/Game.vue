@@ -21,9 +21,8 @@
 
   const store = useStore()
 
-  const timer = ref<number>()
-  const lineCounter = ref<number>()
-  let timeComputed: ComputedRef<void>
+  const timer = ref<number | undefined>()
+  const lineCounter = ref<number | undefined>()
   const boardCanvas = ref<HTMLCanvasElement | null>(null)
   const holdCanvas = ref<HTMLCanvasElement | null>(null)
   const bagCanvas = ref<HTMLCanvasElement | null>(null)
@@ -37,21 +36,13 @@
     time: 0
   })
 
-
-  // computed
-
-  const gameTime = computed(() => localstate.game?.elapsedTime)
-
-  function getElapsedTime() {
-    return localstate.game?.elapsedTime
-  }
   
   // events
 
   let startGame = (game: Game) => {
       console.log('startnig game...')
       if(store.state.game.ready){
-        localstate.game.run()
+        localstate.game.start()
       }
       else if (!store.state.game.ready){
         console.error('game not ready!')
@@ -75,6 +66,7 @@
     const renderer = new Renderer(canvases)
 
     localstate.game = new Game(timer, lineCounter, configuration, renderer) as Game
+    console.log('timer in solo :' , localstate.game.timer)
 
     store.commit('ready')
     console.log('game ready!')

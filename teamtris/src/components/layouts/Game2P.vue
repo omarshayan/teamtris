@@ -9,38 +9,46 @@
   import P2P from '@/composables/game/p2p'
   import ConfigState from '@/store/config'
   import { useStore } from '@/store/store'
+  import router from '@/router'
+  import Timer from '@/components/elements/Timer.vue'
+  import LineCounter from '@/components/elements/LineCounter.vue'
+
+  const props = defineProps<{
+    numLines: number,
+    isHost: boolean,
+    connectCode?: string,
+  }>()
 
   const store = useStore()
 
-
-
+  const timer = ref<number | undefined>()
+  const lineCounter = ref<number | undefined>()
   const boardCanvas = ref<HTMLCanvasElement | null>(null)
   const holdCanvas = ref<HTMLCanvasElement | null>(null)
   const bagCanvas = ref<HTMLCanvasElement | null>(null)
 
   interface GameLocalState {
-    game: Game | Game2P| null
+    game: Game2P| null
   }
   const localstate: GameLocalState = reactive({
     game: null
   })
 
-  const props = defineProps<{
-    isHost?: boolean,
-    connectCode?: string,
-  }>()
   
   // events
   
 
+  let goToMainMenu = () => {
+    router.push('/')
+  }
+
   let onLobbyJoin = (game: Game2P) => {
-      console.log('starting game!')
-      localstate.game.run()
+      console.log('lobby joined')
   }
 
   let startGame = (game: Game) => {
       console.log('startnig game...')
-      localstate.game.run()
+      localstate.game.start()
   }
 
   onMounted(() => {
@@ -56,17 +64,16 @@
     const renderer = new Renderer(canvases)
 
 
-    if (props.isHost != undefined) {
-      localstate.game = new Game2P(configuration, renderer, props.isHost)
-      const p2p = new P2P(props.isHost, localstate.game as Game2P, onLobbyJoin)
+      localstate.game = new Game2P(timer, lineCounter, configuration, renderer, props.isHost) as Game2P
+      const p2p = new P2P(props.isHost, localstate.game, onLobbyJoin)
       console.log("two player game")
       if(props.isHost) {
-        p2p.setup(props.isHost, localstate.game as Game2P, onLobbyJoin)
+        p2p.setup(props.isHost, localstate.game, onLobbyJoin)
       }
       else if (!props.isHost) { 
-        p2p.setup(props.isHost, localstate.game as Game2P, onLobbyJoin, props.connectCode)
+        p2p.setup(props.isHost, localstate.game, onLobbyJoin, props.connectCode)
       }
-    }
+
   })
 
 
@@ -76,13 +83,17 @@
       <div class='l-ui'>
         <canvas ref='holdCanvas' id='hold-canvas' :width='159' :height='96'></canvas>
         <p id=FPS>-1</p>
-        <Button @on-click:button="startGame">start!</Button>
+        <Button :style="{ margin: '10px' }" @on-click:button="startGame">start!</Button>
+        <Button :style="{ margin: '10px' }" @on-click:button="goToMainMenu">back</Button>
+
       </div>
-	    <canvas ref='boardCanvas' id='board-canvas' :width='319' :height='640'></canvas>
+	    <canvas ref='boardCanvas' id='board-canvas' :width='320' :height='736'></canvas>
       <div class='r-ui'>
         <canvas ref='bagCanvas' id='bag-canvas' :width='159' :height ='480' ></canvas>
-        <h3 id=timer>0</h3>
-        <h3 id=line-counter>0/40</h3>
+        <div id='stats-box'>
+          <Timer class='timer'>{{ timer?.toFixed(3) }}</Timer>
+          <LineCounter class='line-counter' :total="numLines">{{ lineCounter }}</LineCounter>
+        </div>
       </div>
    </div>
 </template>
