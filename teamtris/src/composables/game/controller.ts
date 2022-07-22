@@ -187,11 +187,6 @@ class Controller {
 
         }
 
-
-
-
-
-
         //hard gravity / leeway
         if(!game.board.checkCollision(game.player, [1, 0])) {
             clock.lockDelay = 0

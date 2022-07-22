@@ -56,36 +56,7 @@ class Game2P extends Game {
             this.board = new Board(23, 10)
             this.bag = new Bag()
 
-            this.peer.on("data", data => {
-                let dataObj = JSON.parse(data)
-
-                if(dataObj.metadata == "player position"){
-                    // if(this.player) this.player.pos = [Math.trunc(dataObj.y), Math.trunc(dataObj.x)]
-                    console.log('recieved player positoin')
-                    if(this.player) this.remotePlayerStateQueue.push([Math.trunc(dataObj.y), Math.trunc(dataObj.x), Math.trunc(dataObj.orientation)])
-
-                }
-
-                //recieve player piece drop signal
-                if(dataObj.metadata == "piece dropped"){
-                    console.log("piecee dropped")
-                    this.remotePlayerStateQueue = []
-
-                    if(this.player && !this.activeTurn) {
-                        this.player.pos = [Math.trunc(dataObj.y), Math.trunc(dataObj.x)]
-                        this.player.orientation = Math.trunc(dataObj.orientation)
-                    }
-                    this.player.place(this.board)
-
-                    this.bag.canHold = true
-                    this.player = this.bag.pop()
-
-                    this.bag.queue = (dataObj.bag.split(",")).map(letter => new Tetrimino(letter))
-                    this.activeTurn = true
-                    this.new = true
-
-                }
-            })
+            await this.waitForStart()
 
             let bag_data: string = (this.bag.queue.map(mino => mino.letter)).join()
 
@@ -101,16 +72,15 @@ class Game2P extends Game {
 
 
             this.player = this.bag.pop()
-            await this.renderer.loadSprites()
 
 
             this.engine.start()
         }
 
     }
-    public waitForStart= () => {
+    public waitForStart= async () => {
 
-            this.renderer.loadSprites()
+            await this.renderer.loadSprites()
              this.peer.on("data", data => {
                 let dataObj = JSON.parse(data)
 
@@ -154,10 +124,11 @@ class Game2P extends Game {
 
                     this.bag.canHold = true
                     this.player = this.bag.pop()
-
+                    
+                    console.log('recieved bag:  ', data.bag)
                     this.bag.queue = (dataObj.bag.split(",")).map(letter => new Tetrimino(letter))
                     this.activeTurn = true
-                    this.new = true
+
                 }
 
 
@@ -169,6 +140,7 @@ class Game2P extends Game {
 
     public logic2P(clock: Clock) {
 
+        const newClock: Clock = this.logic(clock)
         console.log("turn: " , this.activeTurn , '\t new? : ', this.new)
         if(this.activeTurn && !this.new){
             let player_pos = {
@@ -198,6 +170,7 @@ class Game2P extends Game {
             let placedposx = this.player.pos[1]
             let placedposy = this.player.pos[0]
 
+            console.log('piece placed at ', placedposy, ', ', placedposx)
             this.activeTurn = false
 
             let bag_data: String = (this.bag.queue.map(mino => mino.letter)).join()
@@ -210,10 +183,11 @@ class Game2P extends Game {
                 bag: bag_data
             }
 
+            console.log('bag: ', bag_data)
+
             this.peer.send(JSON.stringify(piece_dropped))
         }
 
-        const newClock: Clock = this.logic(clock)
         return newClock
     }
 

@@ -406,7 +406,7 @@ export class Tetrimino {
         for(let row = this.pos[0]; row < board.rows; row++) {
             this.pos[0] = row
             if(!board.checkCollision(this) && board.checkCollision(this, [1, 0])){
-
+                console.log("placing piece at ", this.pos)
                 this.place(board)
                 return
             }
@@ -414,6 +414,8 @@ export class Tetrimino {
     }
 
     public place(board){
+        
+                console.log("placing piece at ", this.pos)
         for(let x = 0; x < this.size; x++) {
             for(let y = 0; y < this.size; y++){
                 if(this.shape[y][x] == 1){

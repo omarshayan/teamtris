@@ -1,7 +1,7 @@
 
 import { Console } from 'console'
 import { hostname } from 'os'
-import SimplePeer from 'simple-peer'
+import SimplePeer, {SignalData} from 'simple-peer'
 import wrtc from 'wrtc'
 
 import Message from "./messenger"
@@ -191,13 +191,10 @@ export default class P2P {
     
     
                 })
-                peer.on('data', (data: any) => {
-                    game.providePeer(peer)
-                    game.waitForStart()
-                    onConnect(game)
-    
-                })
-    
+                game.providePeer(peer)
+                game.waitForStart()
+                onConnect(game)
+
             }
     
         }

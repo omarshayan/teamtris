@@ -17,6 +17,7 @@ const constants = {
 
 class Game {
 
+    public solo = true
     public activeTurn: boolean = true
     public elapsedTime: number
 
@@ -130,6 +131,7 @@ class Game {
         // check if topped out
         if (this.board.toppedOut){
             this.stop()
+            console.log('topped out!')
             return clock
         }
 
