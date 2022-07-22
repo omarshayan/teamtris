@@ -101,7 +101,6 @@ export default class P2P {
             console.log('signalled ...')
             this.peer.on('connect', () => {
                 console.log("connected")
-                this.peer.send("hey whats up guest dude, guess we're connected huh")
                 this.game.providePeer(this.peer)
                 this.onConnect(this.game)
             })

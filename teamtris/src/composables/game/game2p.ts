@@ -82,6 +82,8 @@ class Game2P extends Game {
 
             await this.renderer.loadSprites()
              this.peer.on("data", data => {
+                let datastr = data.toString()
+                console.log('data recieved: ', data.toString())
                 let dataObj = JSON.parse(data)
 
 
@@ -108,7 +110,7 @@ class Game2P extends Game {
                     // console.log('recieved player pos: ' ,dataObj.y)
                     // console.log('math trunc: ', Math.trunc(dataObj.y))
                     if(this.player && !this.activeTurn) {
-                        this.remotePlayerStateQueue.push([Math.trunc(dataObj.y), Math.trunc(dataObj.x), Math.trunc(dataObj.orientation)])
+                        this.remotePlayerStateQueue.push([Math.trunc(parseInt(dataObj.y)), Math.trunc(parseInt(dataObj.x)), Math.trunc(parseInt(dataObj.orientation))])
                     }
                 }
 
@@ -167,8 +169,8 @@ class Game2P extends Game {
 
         //check if a piece was placed
         if(this.player.placed == true){
-            let placedposx = this.player.pos[1]
-            let placedposy = this.player.pos[0]
+            let placedposx = String(this.player.pos[1])
+            let placedposy = String(this.player.pos[0])
 
             console.log('piece placed at ', placedposy, ', ', placedposx)
             this.activeTurn = false
