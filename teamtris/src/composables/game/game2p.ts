@@ -176,7 +176,6 @@ class Game2P extends Game {
             newClock.dasL         = 0
             newClock.dasR         = 0
             newClock.game         = 0
-            newClock.countdown    = 0
             newClock.dt           = 0
         }
         console.log("turn: " , this.activeTurn , '\t new? : ', this.new)
