@@ -55,12 +55,12 @@ class Game {
         this.lineCounter = lineCounter 
 
         this.renderer = renderer
-        this.engine = new Engine(this.logic.bind(this))
-        // this.initializeEngine()
+        // this.engine = new Engine(this.logic.bind(this))
+        this.engine = this.initializeEngine()
     }
 
     public initializeEngine(){
-        this.engine = new Engine(this.logic.bind(this))
+        return new Engine(this.logic.bind(this))
 
     }
 
@@ -74,6 +74,7 @@ class Game {
 
     public async stop(requestId?: number) {
         this.engine.stop()
+        await this.controller.deinitialize()
         return
     }
 

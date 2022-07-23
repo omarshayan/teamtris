@@ -39,8 +39,8 @@ class Game2P extends Game {
         this.peer = null
     }
 
-    public initializeEngine(): void {
-        this.engine = new Engine(this.logic2P.bind(this))
+    public initializeEngine(): Engine {
+        return new Engine(this.logic2P.bind(this))
     }
 
     public providePeer(peer: SimplePeer.Instance) {
@@ -140,6 +140,7 @@ class Game2P extends Game {
 
     public logic2P(clock: Clock) {
 
+        // console.log('in logic 2p')
         //check if a piece was placed
         if(this.player.placed == true && this.activeTurn){
             let placedposx = this.player.placedAt![1] 
@@ -178,7 +179,7 @@ class Game2P extends Game {
             newClock.countdown    = 0
             newClock.dt           = 0
         }
-        // console.log("turn: " , this.activeTurn , '\t new? : ', this.new)
+        console.log("turn: " , this.activeTurn , '\t new? : ', this.new)
         if(this.activeTurn && !this.new){
             let player_pos = {
                 metadata: "player position",

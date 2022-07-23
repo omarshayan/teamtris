@@ -65,7 +65,10 @@
         }
         validateInput(event)
     }
+    
+
     let onInputUpdate = (event) => {
+        console.log('updating input ', event)
         emit('update:input', event.target.value)
     }
 </script>

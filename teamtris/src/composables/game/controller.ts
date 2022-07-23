@@ -23,19 +23,30 @@ class Controller {
     }
 
     public async initialize() {
-        document.addEventListener("keydown", e => {
+        document.addEventListener("keydown", this.keyDown )
+
+        document.addEventListener("keyup", this.keyUp )
+    }
+    
+    public async deinitialize() {
+        console.log('removing event listener')
+        document.removeEventListener("keydown", this.keyDown)
+        document.removeEventListener("keyup", this.keyUp)
+    }
+
+    // events
+
+    private keyDown = (e: any): void => {
             e. preventDefault()
             this.keyStates[e.key] = true
             if(!e.repeat){
                 this.keyPress(e.key)
             }
+    }
 
-        })
-
-        document.addEventListener("keyup", e => {
+    private keyUp = (e: any): void => {
             e. preventDefault()
             this.keyStates[e.key] = false
-        })
     }
 
     public keyPress(key: string){

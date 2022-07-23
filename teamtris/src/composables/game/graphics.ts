@@ -99,15 +99,17 @@ class GameRenderer{
 
         switch(contextId){
             case "game": {
-                if (!y || !x) {
+                if (y==undefined || x==undefined) {
                     throw new Error('you can\'t render a sprite in the game without providing coordinates')
+                    // return
                 }
                 this.renderCell(spriteId, y, x)
                 break;
             }
             case "bag": {
-                if (!y) {
+                if (y==undefined) {
                     throw new Error('you can\'t render a sprite in the bag without providing a coordinate')
+                    // return
                 }
                 
                 this.contexts["bag"].drawImage(this.previewSprites!,
