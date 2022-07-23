@@ -136,7 +136,8 @@ class Game {
         }
 
         //check if a piece was placed
-        if(this.player.placed == true){
+        if(this.solo && this.player.placed == true && this.activeTurn){
+            console.log('in a solo game')
             this.bag.canHold = true
             this.player = this.bag.pop()
         }

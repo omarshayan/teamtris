@@ -1,4 +1,5 @@
 import Game from "./game"
+import Game2P from './game2p'
 import Clock from './types/clock'
 
 class Controller {
@@ -40,6 +41,7 @@ class Controller {
 
     public keyPress(key: string){
         if(!this.game.activeTurn){ return }
+        if (this.game.player.placed){ return }
         switch(key) {
             case "ArrowLeft": {
                 // console.log('left')
@@ -82,8 +84,11 @@ class Controller {
                 }                break;
             }
 
-            case " ": {
+            case " ": {                
+                if(this.game.activeTurn){
                 this.game.player.hardDrop(this.game.board)
+
+                }                
                 break;
             }
 
@@ -121,7 +126,7 @@ class Controller {
     }
 
 
-    public countTics(clock: Clock, game: Game){
+    public countTics(clock: Clock, game: Game | Game2P){
 
         //das left
         if (!this.keyStates["ArrowLeft"] || this.keyStates["ArrowRight"]){

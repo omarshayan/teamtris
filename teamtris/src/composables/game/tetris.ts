@@ -139,6 +139,7 @@ export class Tetrimino {
     rotations: number[][][]
     public orientation: number
     placed: boolean
+    public placedAt: [y: number, x: number]
     autorepeat: boolean
     public lock_clock: number
     public canSD: boolean
@@ -206,7 +207,9 @@ export class Tetrimino {
     }
 
     public move(dir: [dy: number, dx: number], board: Board){
-
+        if (this.placed){
+            return
+        }
         this.pos = [this.pos[0] + dir[0], this.pos[1] + dir[1]]
         if(!board.inBounds(this)){
             this.pos = [this.pos[0] - dir[0], this.pos[1] - dir[1]]
@@ -214,10 +217,11 @@ export class Tetrimino {
         else if (board.inBounds(this)){
             this.lock_clock = 0
         }
-        if(board.checkCollision(this)){
+        if(board.checkCollision(this) && !this.placed){
             this.pos = [this.pos[0] - dir[0], this.pos[1] - dir[1]]
             if(dir[0] >= 1){
-                this.place(board)
+                console.log('placing due to collision')
+                this.place(board, this.pos, this.orientation)
             }
         }
     }
@@ -402,20 +406,28 @@ export class Tetrimino {
     }
 
     public hardDrop(board){
-
-        for(let row = this.pos[0]; row < board.rows; row++) {
-            this.pos[0] = row
-            if(!board.checkCollision(this) && board.checkCollision(this, [1, 0])){
-                console.log("placing piece at ", this.pos)
-                this.place(board)
-                return
+        if(!this.placed){
+            for(let row = this.pos[0]; row < board.rows; row++) {
+                this.pos[0] = row
+                console.log('row: ', row)
+                if(!board.checkCollision(this) && board.checkCollision(this, [1, 0])){
+                    console.log("placing piece at ", this.pos)
+                    this.place(board, this.pos, this.orientation)
+                    return
+                }
             }
         }
     }
 
-    public place(board){
-        
-                console.log("placing piece at ", this.pos)
+    public place(board: Board, pos?, orientation?){
+        this.placed = true
+        if(pos && orientation!=undefined) {
+            this.pos = pos
+            this.orientation = orientation
+            this.placedAt = pos
+            console.log('placing piece due to instructions..')
+        }
+                console.log("placing  at ", this.placedAt)
         for(let x = 0; x < this.size; x++) {
             for(let y = 0; y < this.size; y++){
                 if(this.shape[y][x] == 1){
@@ -426,7 +438,6 @@ export class Tetrimino {
                 }
             }
         }
-        this.placed = true
 
 
 
