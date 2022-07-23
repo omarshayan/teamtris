@@ -1,7 +1,7 @@
 import Renderer from '@/composables/renderer'
 import { withCtx } from 'vue'
 
-const spriteSheet = {
+const spriteSheet: any = {
     //sprite index map
     //top left of sprite sheet is 0,0
     0: [0,0], //background sprite
@@ -45,8 +45,8 @@ class GameRenderer{
     private gameRes: [width: number, height: number]
     private bagRes: [width: number, height: number]
     private spriteSize: number
-    private sprites: HTMLImageElement
-    private previewSprites: HTMLImageElement
+    private sprites: HTMLImageElement | null
+    private previewSprites: HTMLImageElement | null
     private previewSize: [width: number, height: number]
 
 
@@ -54,14 +54,16 @@ class GameRenderer{
 
         this.contexts = {}
         for(const canvas in canvases){
-            this.contexts[canvas] = canvases[canvas].getContext("2d")
+            this.contexts[canvas] = canvases[canvas].getContext("2d")!
         }
         this.gameRes = [canvases["game"].width, canvases["game"].height]
         this.bagRes = [canvases["bag"].width, canvases["bag"].height]
         this.spriteSize = 32
         this.previewSize = [this.spriteSize*5, this.spriteSize*3]
 
-        this.countdownCount = 3
+        this.sprites = null
+        this.previewSprites = null
+        this.countdown = ""
 
         this.contexts['game'].font = "60px Floppy Pixel Regular"
         this.contexts['game'].fillStyle = 'white'
@@ -97,18 +99,25 @@ class GameRenderer{
 
         switch(contextId){
             case "game": {
+                if (!y || !x) {
+                    throw new Error('you can\'t render a sprite in the game without providing coordinates')
+                }
                 this.renderCell(spriteId, y, x)
                 break;
             }
             case "bag": {
-                this.contexts["bag"].drawImage(this.previewSprites,
+                if (!y) {
+                    throw new Error('you can\'t render a sprite in the bag without providing a coordinate')
+                }
+                
+                this.contexts["bag"].drawImage(this.previewSprites!,
                     0, coords[1]*this.previewSize[1], this.previewSize[0], this.previewSize[1],
                     0, y*this.previewSize[1], this.previewSize[0], this.previewSize[1])
                 break;
             }
             case "hold": {
                 this.clearHeldPiece()
-                this.contexts["hold"].drawImage(this.previewSprites,
+                this.contexts["hold"].drawImage(this.previewSprites!,
                     coords[0]*this.previewSize[0], coords[1]*this.previewSize[1], this.previewSize[0], this.previewSize[1],
                     0, 0, this.previewSize[0], this.previewSize[1])
                 break;
@@ -129,7 +138,7 @@ class GameRenderer{
             )
             return
         }
-        this.contexts["game"].drawImage(this.sprites,
+        this.contexts["game"].drawImage(this.sprites!,
             coords[0]*mul, coords[1]*mul, mul, mul,
             x*mul, y*mul, mul, mul
             )

@@ -48,7 +48,7 @@
 
   let startGame = (game: Game) => {
       console.log('startnig game...')
-      localstate.game.start()
+      localstate.game?.start()
   }
 
   onMounted(() => {

@@ -17,8 +17,7 @@ const constants = {
 }
 
 class Game2P extends Game {
-    peer: SimplePeer.Instance
-    activeTurn: boolean
+    peer: SimplePeer.Instance | null
     isHost: boolean
     role: string
     remotePlayerStateQueue: [y: number, x: number, orientation: number][]
@@ -34,9 +33,10 @@ class Game2P extends Game {
             this.activeTurn = false
             this.role = "guest"
         }
+        else { this.role = ""}
         this.isHost = isHost
         this.remotePlayerStateQueue = []
-
+        this.peer = null
     }
 
     public initializeEngine(): void {
@@ -64,7 +64,7 @@ class Game2P extends Game {
 
             console.log("sending init gamestate to host!")
 
-            this.peer.send(JSON.stringify(init_gamestate))
+            this.peer!.send(JSON.stringify(init_gamestate))
 
 
 
@@ -78,7 +78,7 @@ class Game2P extends Game {
     public waitForStart= async () => {
 
             await this.renderer.loadSprites()
-             this.peer.on("data", data => {
+             this.peer!.on("data", data => {
                 let datastr = data.toString()
                 // console.log('data recieved: ', data.toString())
                 let dataObj = JSON.parse(data)
@@ -94,7 +94,7 @@ class Game2P extends Game {
 
                     this.bag = new Bag()
 
-                    this.bag.queue = (dataObj.content.split(",")).map(letter => new Tetrimino(letter))
+                    this.bag.queue = (dataObj.content.split(",")).map((letter: string) => new Tetrimino(letter))
 
                     this.player = this.bag.pop()
                     this.engine.start()
@@ -114,7 +114,7 @@ class Game2P extends Game {
                     console.log("piecee dropped")
                     this.remotePlayerStateQueue = []
                     if(this.player && !this.activeTurn) {
-                        let pos = [Math.trunc(dataObj.y), Math.trunc(dataObj.x)]
+                        let pos: [number, number] = [Math.trunc(dataObj.y), Math.trunc(dataObj.x)]
                         let orientation = Math.trunc(dataObj.orientation)
                         if(!this.player.placed){
 
@@ -125,7 +125,7 @@ class Game2P extends Game {
                         this.player = this.bag.pop()
                         
                         console.log('recieved bag:  ', dataObj.bag)
-                        this.bag.queue = (dataObj.bag.split(",")).map(letter => new Tetrimino(String(letter)))
+                        this.bag.queue = (dataObj.bag.split(",")).map( (letter: string) => new Tetrimino(String(letter)))
                     }
                     this.activeTurn = true
 
@@ -142,8 +142,8 @@ class Game2P extends Game {
 
         //check if a piece was placed
         if(this.player.placed == true && this.activeTurn){
-            let placedposx = this.player.placedAt[1] 
-            let placedposy = this.player.placedAt[0] 
+            let placedposx = this.player.placedAt![1] 
+            let placedposy = this.player.placedAt![0] 
 
             console.log('piece placed at ', placedposy, ', ', placedposx)
             this.activeTurn = false
@@ -163,7 +163,7 @@ class Game2P extends Game {
 
             console.log('bag: ', bag_data)
 
-            this.peer.send(JSON.stringify(piece_dropped))
+            this.peer!.send(JSON.stringify(piece_dropped))
         }
         const newClock: Clock = this.logic(clock)
         if (!this.activeTurn) {
@@ -187,7 +187,7 @@ class Game2P extends Game {
                 orientation: this.player.orientation
             }
             // console.log('sending pos ', player_pos)
-            this.peer.send(JSON.stringify(player_pos))
+            this.peer!.send(JSON.stringify(player_pos))
         }
         if(!this.new && !this.activeTurn){
             if(this.remotePlayerStateQueue.length > 0) {
@@ -195,8 +195,8 @@ class Game2P extends Game {
                 // console.log('remotePlayerStateQueue: ', this.remotePlayerStateQueue)
                 let remotePlayerState = this.remotePlayerStateQueue.shift()
                 console.log('setting position from remote', remotePlayerState)
-                this.player.pos = [remotePlayerState[0], remotePlayerState[1]]
-                this.player.orientation = remotePlayerState[2]
+                this.player.pos = [remotePlayerState![0], remotePlayerState![1]]
+                this.player.orientation = remotePlayerState![2]
                 this.player.shape = this.player.rotations[this.player.orientation]
 
             }

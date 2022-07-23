@@ -1,5 +1,3 @@
-import { request } from "http"
-import Renderer from "./graphics"
 import Clock from './types/clock'
 
 type GameLogic = (clock: Clock) => Clock
@@ -7,11 +5,8 @@ type GameLogic = (clock: Clock) => Clock
 class Engine {
     private running: boolean
     private requestId: number | undefined
-    private lastTime: number
-    private renderer: Renderer
+    private lastTime: number 
     private gameLogic: GameLogic
-
-    private gravityClock: number
 
     private clock: Clock
 
@@ -29,11 +24,11 @@ class Engine {
             countdown: 0,
             dt: 0,
         }
+        this.lastTime = (new Date()).getTime()
     }
 
     public start() {
         this.running = true
-        this.gravityClock = 0
         this.lastTime = (new Date()).getTime()
 
         window.requestAnimationFrame(this.nextFrame.bind(this))
@@ -41,11 +36,6 @@ class Engine {
     }
 
     public stop() {
-        // if (requestId) {
-        //     console.log('stopping game with passed request id')
-        //     window.cancelAnimationFrame(requestId)
-        //     r
-        // }
         if (this.requestId){
             console.log('stopping game..')
             console.log(this.requestId)
@@ -65,6 +55,7 @@ class Engine {
         //     val += dt
         // });
 
+        // TODO: CLEAN THIS UP LOOPING THROUGH OBJECTS
         this.clock.sd           += dt
         this.clock.grav         += dt
         this.clock.lockDelay    += dt

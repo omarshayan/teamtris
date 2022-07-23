@@ -1,4 +1,4 @@
-import Peer from "simple-peer"
+import SimplePeer from "simple-peer"
 import Message from "./messenger"
 
 class Chat{
@@ -6,12 +6,12 @@ class Chat{
     el: HTMLElement
     history: string[]
     form: HTMLFormElement
-    peer: Peer
+    peer: SimplePeer.Instance
 
-    constructor(chat_form: HTMLFormElement, peer: Peer, el: HTMLElement){
+    constructor(chat_form: HTMLFormElement, peer: SimplePeer.Instance, el: HTMLElement){
         this.history = []
         this.form = chat_form
-        this.peer = Peer
+        this.peer = peer
         this.el = el
     }
     
@@ -25,7 +25,7 @@ class Chat{
             const chatFormData = new FormData(this.form)
             let chatValue = chatFormData.get("chat-input")
             console.log(chatValue)
-            let chatString: string = chatValue.toString()
+            let chatString: string = chatValue!.toString()
             this.history.push(chatString)
             this.form.reset()
             this.updateDOM()
@@ -37,7 +37,7 @@ class Chat{
         }
 
         //add event listener onto peer for chat msg receipt
-        this.peer.on( data => {
+        this.peer.on('data', (data: any) => {
             let dataObj = JSON.parse(data)
             if(dataObj.metadata == "chat"){
                 this.history.push(dataObj.content.toString())

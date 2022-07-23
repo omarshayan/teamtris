@@ -7,15 +7,7 @@ const letters = ['T', 'I', 'O', 'S', 'Z', 'J', 'L']
 const blankRow: any[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 
-const tetrimatrices:{
-    T: any [][][]
-    I: any [][][]
-    O: any [][][]
-    S: any [][][]
-    Z: any [][][]
-    J: any [][][]
-    L: any [][][]
-} = {
+const tetrimatrices: any = {
     T: [[[0, 1, 0],
         [1, 1, 1],
         [0, 0, 0]],
@@ -139,7 +131,7 @@ export class Tetrimino {
     rotations: number[][][]
     public orientation: number
     placed: boolean
-    public placedAt: [y: number, x: number]
+    public placedAt: [y: number, x: number] | null
     autorepeat: boolean
     public lock_clock: number
     public canSD: boolean
@@ -156,8 +148,11 @@ export class Tetrimino {
         this.shape = this.rotations[this.orientation]
         this.size = this.shape.length
         this.placed = false
+        this.placedAt = null
         this.autorepeat = false
+        this.canSD = false
         this.lock_clock = 0
+
     }
 
     public render(contextId: string, renderer: Renderer, board: Board) {
@@ -405,7 +400,7 @@ export class Tetrimino {
         }
     }
 
-    public hardDrop(board){
+    public hardDrop(board: Board){
         if(!this.placed){
             for(let row = this.pos[0]; row < board.rows; row++) {
                 this.pos[0] = row
@@ -419,7 +414,7 @@ export class Tetrimino {
         }
     }
 
-    public place(board: Board, pos?, orientation?){
+    public place(board: Board, pos?: [number, number], orientation?: number){
         this.placed = true
         if(pos && orientation!=undefined) {
             this.pos = pos
@@ -612,7 +607,7 @@ export class Bag {
             let newBag = this.shuffledBag(letters)
             this.queue = newBag.concat(this.queue)
         }
-          return this.queue.pop()
+          return this.queue.pop()!
       }
 
       public render (renderer: Renderer, board: Board) {

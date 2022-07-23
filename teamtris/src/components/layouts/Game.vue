@@ -42,7 +42,7 @@
   let startGame = (game: Game) => {
       console.log('startnig game...')
       if(store.state.game.ready){
-        localstate.game.start()
+        localstate.game?.start()
       }
       else if (!store.state.game.ready){
         console.error('game not ready!')

@@ -2,7 +2,6 @@
 import { Console } from 'console'
 import { hostname } from 'os'
 import SimplePeer, {SignalData} from 'simple-peer'
-import wrtc from 'wrtc'
 
 import Message from "./messenger"
 import Game2P from "./game2p"
@@ -13,8 +12,8 @@ export default class P2P {
 
     game: Game2P
     isHost: boolean
-    peer: SimplePeer.Instance
-    socket: WebSocket
+    peer: SimplePeer.Instance | null
+    socket: WebSocket | null
     wssUrl: string
     onConnect: (game: Game2P) => void
 
@@ -23,6 +22,8 @@ export default class P2P {
         this.isHost = isHost
         this.onConnect = onConnect
         this.wssUrl = import.meta.env.VITE_WEBSOCKET_SERVER_URL
+        this.peer = null
+        this.socket = null
     }
 
     private connect2socket(): WebSocket {
@@ -46,7 +47,7 @@ export default class P2P {
         }
     
         if(!isHost){
-            let peer = new SimplePeer({wrtc: wrtc, trickle: false})
+            let peer = new SimplePeer({trickle: false})
             this.peer = peer
             
             console.log('connectcode: ', connectCode)
@@ -58,7 +59,7 @@ export default class P2P {
         }
     }
 
-    public handleSocketMessage = async (event) => {
+    public handleSocketMessage = async (event: any) => {
 
         let msgblob = event.data
         const msgstring = await(new Response(msgblob)).text()
@@ -76,7 +77,7 @@ export default class P2P {
         }
 
         if(message.metadata == "lobby ready"){
-            let peer = new SimplePeer({initiator: true, trickle: false, wrtc: wrtc})
+            let peer = new SimplePeer({initiator: true, trickle: false})
             this.peer = peer
             console.log("LOBBY READY TO START!")
             console.log( "A player has joined the lobbert. \nInitiating P2P...")
@@ -86,7 +87,7 @@ export default class P2P {
                 console.log('signalling!')
                 const P2Pdata = new Message("host", "p2p data", data)
                 console.log("sending hostdata to server: ")
-                this.socket.send(JSON.stringify(P2Pdata))
+                this.socket!.send(JSON.stringify(P2Pdata))
             })
         }
 
@@ -97,11 +98,11 @@ export default class P2P {
             console.log('message from server: ')
             console.log(message)
             console.log('peer: ', this.peer)
-            this.peer.signal(message.content)
+            this.peer!.signal(message.content)
             console.log('signalled ...')
-            this.peer.on('connect', () => {
+            this.peer!.on('connect', () => {
                 console.log("connected")
-                this.game.providePeer(this.peer)
+                this.game.providePeer(this.peer!)
                 this.onConnect(this.game)
             })
         }
@@ -113,11 +114,11 @@ export default class P2P {
         console.log( "A player has joined the lobbert. \nInitiating P2P...")
 
         console.log(this.peer)
-        this.peer.on('signal', (data: string | undefined) => {
+        this.peer!.on('signal', (data: string | undefined) => {
             console.log('signalling!')
             const P2Pdata = new Message("host", "p2p data", data)
             console.log("sending hostdata to server: ")
-            this.socket.send(JSON.stringify(P2Pdata))
+            this.socket!.send(JSON.stringify(P2Pdata))
         })
 
     }
@@ -138,7 +139,7 @@ export default class P2P {
             //     content: "hello"
             // }
             let message = new Message("host", "hello")
-            this.socket.send(JSON.stringify(message))
+            this.socket!.send(JSON.stringify(message))
         }
     
         this.socket.onmessage = this.handleSocketMessage

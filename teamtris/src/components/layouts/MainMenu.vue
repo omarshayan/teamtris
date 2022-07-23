@@ -23,7 +23,7 @@
         router.push('/solo')
     }
 
-    let onConnectCodeSubmit = async (e) => {
+    let onConnectCodeSubmit = async (e: any) => {
         console.log(e)
         // validate alphanumeric and length?
         // check if a lobby exists with that connect code

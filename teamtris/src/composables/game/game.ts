@@ -55,11 +55,13 @@ class Game {
         this.lineCounter = lineCounter 
 
         this.renderer = renderer
-        this.initializeEngine()
+        this.engine = new Engine(this.logic.bind(this))
+        // this.initializeEngine()
     }
 
     public initializeEngine(){
         this.engine = new Engine(this.logic.bind(this))
+
     }
 
     public async start() {
