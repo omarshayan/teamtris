@@ -1,3 +1,5 @@
+import usersRoute from './route/user.js'
+
 const express = require("express")
 const WebSocket = require('ws')
 const cors = require('cors')
@@ -34,6 +36,10 @@ var cors_config = {
 
 app.use(cors(cors_config))
 app.use( '/static', express.static('public'))
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+
+app.use('/api/v1', usersRoute)
 
 app.get('/', (req, res) => {
     res.send('welcome to the server bitch')
