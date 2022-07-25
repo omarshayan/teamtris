@@ -1,8 +1,7 @@
 import { createApp} from 'vue'
 import App from './App.vue'
 import router from './router'
-import VueAuth0Plugin from 'vue-auth0-plugin'
-import { createStore, Store } from 'vuex'
+import axios, {AxiosStatic } from 'axios'
 import {store, key } from './store/store'
 const app = createApp(App)
 

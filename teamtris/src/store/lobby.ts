@@ -1,4 +1,4 @@
-import { Lobby } from '@/api/lobby'
+import { Lobby } from '@/api/data/lobby'
 
 
 export default {

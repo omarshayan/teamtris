@@ -3,7 +3,7 @@
     import MenuButton from "../elements/MenuButton.vue"
     import NewGameIcon from "../icons/NewGameIcon.vue"
     import Input from '../elements/Input.vue'
-    import LobbyAPI, { Lobby } from '@/api/lobby'
+    import LobbyAPI, { Lobby } from '@/api/data/lobby'
     import { useStore } from '@/store/store'
 
     const router = useRouter()

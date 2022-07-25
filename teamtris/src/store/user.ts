@@ -3,5 +3,15 @@ export interface UserState {
 }
 
 export default {
-    
+
+
+  state: () => ({
+      name: ''
+  }) ,
+  mutations: {
+    set: function (state: UserState, payload: string) {
+      state.name = payload;
+    }
+  },
+
 }

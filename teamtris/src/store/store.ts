@@ -3,7 +3,7 @@ import { Store, createStore, useStore as baseUseStore} from 'vuex'
 import configModule, { ConfigState } from './config'
 import lobbyModule from './lobby'
 import gameModule, { GameState } from './game'
-import { Lobby } from '@/api/lobby'
+import { Lobby } from '@/api/data/lobby'
 
 export interface State {
     config: ConfigState
