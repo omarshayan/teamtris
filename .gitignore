@@ -8,7 +8,11 @@ yarn.lock*
 package-lock.json
 Cargo.lock
 
+private.key
+public.key
+
 # Runtime data
+
 pids
 *.pid
 *.seed
