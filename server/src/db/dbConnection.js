@@ -1,8 +1,8 @@
 /* eslint-disable no-tabs */
 /* eslint-disable no-console */
-import { createRequire } from 'module';
-console.log('import.meta.url: ' , import.meta.url)
-const require = createRequire(import.meta.url);
+// import { createRequire } from 'module';
+// console.log('import.meta.url: ' , import.meta.url)
+// const require = createRequire(import.meta.url);
 
 const pool = require('./pool.js')
 
@@ -13,7 +13,7 @@ pool.on('connect', () => {
 /**
  * Create User Table
  */
-const createUserTable = () => {
+module.exports.createUserTable = function createUserTable() {
 	console.log('creating userst able')
 	const userCreateQuery = `CREATE TABLE IF NOT EXISTS users
   (id SERIAL PRIMARY KEY, 
@@ -35,7 +35,7 @@ const createUserTable = () => {
 /**
  * Drop User Table
  */
-const dropUserTable = () => {
+module.exports.dropUserTable = function dropUserTable() {
 	const usersDropQuery = 'DROP TABLE IF EXISTS users'
 	pool.query(usersDropQuery)
 		.then((res) => {
@@ -53,9 +53,5 @@ pool.on('remove', () => {
 	process.exit(0)
 })
 
-export {
-	createUserTable,
-	dropUserTable,
-}
 
-require('make-runnable')
+// require('make-runnable')

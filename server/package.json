@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
-    "create-dev-tables": "node ./src/db/dbConnection.mjs createUserTable",
+    "create-dev-tables": "node -e 'require(\"./src/db/dbConnection.js\").createUserTable()'",
     "drop-dev-tables": "node ./src/db/dbConnection.mjs dropUserTable"
   },
   "keywords": [],

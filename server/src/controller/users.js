@@ -90,6 +90,7 @@ const registerUser = async (req, res) => {
    * @returns {object} user object
    */
 const loginUser = async (req, res) => {
+	console.log('logging in ')
 	const { username, password } = req.body
 
 	if (isEmpty(username) || isEmpty(password)) {
