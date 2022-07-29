@@ -1,6 +1,7 @@
 /* eslint-disable no-tabs */
 /* eslint-disable no-console */
 import { createRequire } from 'module';
+console.log('import.meta.url: ' , import.meta.url)
 const require = createRequire(import.meta.url);
 
 const pool = require('./pool.js')
@@ -13,11 +14,10 @@ pool.on('connect', () => {
  * Create User Table
  */
 const createUserTable = () => {
+	console.log('creating userst able')
 	const userCreateQuery = `CREATE TABLE IF NOT EXISTS users
   (id SERIAL PRIMARY KEY, 
-  email VARCHAR(100) UNIQUE NOT NULL, 
-  firstName VARCHAR(100), 
-  lastName VARCHAR(100), 
+  username VARCHAR(100) UNIQUE NOT NULL, 
   password VARCHAR(100) NOT NULL,
   createdOn DATE NOT NULL)`
 

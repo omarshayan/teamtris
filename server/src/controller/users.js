@@ -11,7 +11,7 @@ const Utils = require('../helpers/utils.js')
 
 const {
 	comparePassword,
-	isValidEmail,
+	isValidUsername,
 	validatePassword,
 	isEmpty,
 } = require('../helpers/validation.js')
@@ -27,15 +27,15 @@ const Response = require('../helpers/response.js')
    */
 const registerUser = async (req, res) => {
 	const {
-		email, firstName, lastName, password,
+		username, firstName, lastName, password,
 	} = req.body
 
 	const createdOn = moment(new Date())
 
-	if (!isValidEmail(email)) {
+	if (!isValidUsername(username)) {
 		return Response.sendErrorResponse({
 			res,
-			message: 'Please enter a valid Email address',
+			message: 'Please enter a valid username address',
 			statusCode: 400,
 		})
 	}
@@ -51,12 +51,12 @@ const registerUser = async (req, res) => {
 	const hashedPassword = Utils.hashPassword(password)
 
 	const createUserQuery = `INSERT INTO
-      users(email, firstName, lastName, password, createdOn)
+      users(username, firstName, lastName, password, createdOn)
       VALUES($1, $2, $3, $4, $5)
       returning *`
 
 	const values = [
-		email,
+		username,
 		firstName,
 		lastName,
 		hashedPassword,
@@ -90,35 +90,35 @@ const registerUser = async (req, res) => {
    * @returns {object} user object
    */
 const loginUser = async (req, res) => {
-	const { email, password } = req.body
+	const { username, password } = req.body
 
-	if (isEmpty(email) || isEmpty(password)) {
+	if (isEmpty(username) || isEmpty(password)) {
 		return Response.sendErrorResponse({
 			res,
-			message: 'Email or Password detail is missing',
+			message: 'username or Password detail is missing',
 			statusCode: 400,
 		})
 	}
 
-	if (!isValidEmail(email) || !validatePassword(password)) {
+	if (!isValidUsername(username) || !validatePassword(password)) {
 		return Response.sendErrorResponse({
 			res,
-			message: 'Please enter a valid Email or Password',
+			message: 'Please enter a valid username or Password',
 			statusCode: 400,
 		})
 	}
 
-	const loginUserQuery = 'SELECT * FROM users WHERE email = $1'
+	const loginUserQuery = 'SELECT * FROM users WHERE username = $1'
 
 	try {
-		const { rows } = await dbQuery.query(loginUserQuery, [email])
+		const { rows } = await dbQuery.query(loginUserQuery, [username])
 
 		const dbResponse = rows[0]
 
 		if (!dbResponse) {
 			return Response.sendErrorResponse({
 				res,
-				message: 'User with this email does not exist',
+				message: 'User with this username does not exist',
 				statusCode: 400,
 			})
 		}
@@ -159,7 +159,7 @@ const me = async (req, res) => {
 			message: 'User details successfully fetched',
 			responseBody: {
 				firstName: res.user.firstname,
-				email: res.user.email,
+				username: res.user.username,
 				lastName: res.user.lastname,
 				token: res.token,
 				id: res.user.id,

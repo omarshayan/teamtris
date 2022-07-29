@@ -9,7 +9,7 @@ export interface Lobby {
     gameReady: boolean
 }
 
-export default (baseUrl: string) => ({ 
-    byCode: createEndpoint<null, Lobby>  (baseUrl, APIRequestMethod.get,    '/lobbies/:id'),
-    list:   createEndpoint<null, Lobby[]>(baseUrl, APIRequestMethod.get,    '/lobbies'),
+export default () => ({ 
+    byCode: createEndpoint<null, Lobby>  ( APIRequestMethod.get,    '/lobbies/:code'),
+    list:   createEndpoint<null, Lobby[]>( APIRequestMethod.get,    '/lobbies'),
 })

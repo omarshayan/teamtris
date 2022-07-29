@@ -1,4 +1,5 @@
-import usersRoute from './route/user.js'
+
+const usersRoute = require('./route/user')
 
 const express = require("express")
 const WebSocket = require('ws')
@@ -19,7 +20,7 @@ class Message {
 let lobby_list = []
 
 const app = express()
-const wsport = process.env.PORT || 1234
+const wsport = process.env.WSPORT || 1234
 
 const port = process.env.PORT || 1235
 
@@ -28,7 +29,8 @@ const wss = new WebSocket.Server({ server: app.listen(wsport)})
 
 var cors_config = {
     origin: "http://localhost:3000",
-    methods: ["GET"],
+    credentials: true,
+    methods: ["GET", "POST"],
     allowedHeaders: ["Authorization", "Content-Type"],
     maxAge: 86400,
     optionsSucessStatus: 200

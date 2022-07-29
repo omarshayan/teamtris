@@ -30,6 +30,8 @@ function appendQuery<Entity>(
         path += '?q=' + encodeURIComponent(JSON.stringify(options));
     }
 
+    console.log('path: ', path)
+
     return path;
 
 
@@ -55,11 +57,11 @@ function massageResponse<Data>(response: APIResponse): APIResult<Data> {
 }
 
 export default <Entity, Data>(
-    baseURL: string,
     method:  APIRequestMethod,
     path:    string
 ): APIEndpoint<Entity, Data> => {
 
+    const baseURL = import.meta.env.VITE_API_SERVER_BASEURL
     // extract path param names
     const REGEX = /:(\w+)/g;
     const pathKeys: string[] = [];
@@ -90,7 +92,7 @@ export default <Entity, Data>(
 
 
         // request URL
-        const url     = baseURL + appendQuery(path, pathKeys, query);
+        const url     = baseURL + '/api/v1' + appendQuery(path, pathKeys, query);
 
         // log request
         const logData = data instanceof FormData
@@ -112,5 +114,5 @@ export default <Entity, Data>(
         console.log('%capi result:', style, result, elapsed);
 
         return result;
-    };
-};
+    }
+}

@@ -18,7 +18,8 @@
         }
     }
     defineExpose({
-        updateText
+        updateText,
+        input
     })
     const props = defineProps({
         height: Number,
@@ -39,21 +40,18 @@
 
     const validateInput = (e) => {
         // check regex
-        if (!(
-            (e.key.length > 1) ||
-            props.regex.test(e.key)
+        if ((
+            props.regex &&
+            !props.regex.test(e.key)
         )) e.preventDefault()
-        console.log('regex fine')
         // check length
         if (
             props.maxlength < e.target.value.length
         ) e.preventDefault()
-        console.log('length fine')
         //check max/min
         if (!( props.maximum && props.minimum ) && 
             ( props.maximum > parseFloat(String(input.value.value) + e.key))
         ) e.preventDefault()
-        console.log('max/min fine, returning')
 
         return
     };

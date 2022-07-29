@@ -9,13 +9,13 @@ const dbQuery = require('../db/dbQuery.js')
 const Joi = require('@hapi/joi')
 
 /**
-   * isValidEmail helper method
-   * @param {string} email
+   * isValidUsername helper method
+   * @param {string} username
    * @returns {Boolean} True or False
    */
-const isValidEmail = (email) => {
-	const regEx = /\S+@\S+\.\S+/
-	return regEx.test(email)
+const isValidUsername = (username) => {
+	const regEx = /[a-zA-Z0-9]{2,}/
+	return regEx.test(username)
 }
 
 /**
@@ -55,9 +55,7 @@ const empty = (input) => {
 
 const createUser = async (req, res, next) => {
 	const schema = Joi.object({
-		firstName: Joi.string().required(),
-		lastName: Joi.string().required(),
-		email: Joi.string().email().required(),
+		username: Joi.string().required(),
 		password: Joi.string().required(),
 	})
 
@@ -65,12 +63,12 @@ const createUser = async (req, res, next) => {
 
 	if (result.error) return Response.sendErrorResponse({ res, message: result.error.details[0].message.replace(/['"]/g, ''), statusCode: 422 })
 
-	const emailCheck = 'SELECT * FROM users WHERE email = $1'
+	const usernameCheck = 'SELECT * FROM users WHERE username = $1'
 
-	// check if email exists already
-	const { rows } = await dbQuery.query(emailCheck, [req.body.email])
+	// check if username exists already
+	const { rows } = await dbQuery.query(usernameCheck, [req.body.username])
 	const dbResponse = rows[0]
-	if (dbResponse) return Response.sendErrorResponse({ res, message: 'This email address already exists, kindly provide a new email address' })
+	if (dbResponse) return Response.sendErrorResponse({ res, message: 'This username has been taken kid.' })
 	return next()
 }
 
@@ -83,7 +81,7 @@ const createUser = async (req, res, next) => {
 const comparePassword = (hashedPassword, password) => bcrypt.compareSync(password, hashedPassword)
 
 module.exports = {
-	isValidEmail,
+	isValidUsername,
 	validatePassword,
 	isEmpty,
 	empty,

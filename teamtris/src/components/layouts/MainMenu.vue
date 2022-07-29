@@ -3,15 +3,16 @@
     import MenuButton from "../elements/MenuButton.vue"
     import NewGameIcon from "../icons/NewGameIcon.vue"
     import Input from '../elements/Input.vue'
-    import LobbyAPI, { Lobby } from '@/api/data/lobby'
+    import lobbyAPI, { Lobby } from '@/api/data/lobby'
     import { useStore } from '@/store/store'
 
+    
     const router = useRouter()
 
     const store = useStore()
 
     let alphaNumeric = new RegExp(/^[a-zA-Z0-9]+$/)
-    let api = new LobbyAPI()
+
     // events
     let goToNewGame = () => {
         router.push('/host')
@@ -27,7 +28,14 @@
         console.log(e)
         // validate alphanumeric and length?
         // check if a lobby exists with that connect code
-        const lobby: Lobby = await api.getLobby(e)
+        const res = await store.state.api.invoke(lobbyAPI().byCode)
+        let lobby: Lobby
+
+        if (!res) {
+            console.warn('couln\'nt query lobby api')
+            return
+        }
+        lobby = res
         // show a loading screen
         // connect to lobby and ridirect to game
 
