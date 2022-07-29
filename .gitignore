@@ -10,7 +10,8 @@ Cargo.lock
 
 private.key
 public.key
-
+jwtRS256.key
+jwtRS256.key.pub
 # Runtime data
 
 pids
