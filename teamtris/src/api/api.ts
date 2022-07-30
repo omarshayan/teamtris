@@ -27,9 +27,19 @@ class fetchAPI {
             }
             else return
     }
-    
+
     public login = async (username: string, password: string) => {
         api.post('/auth/login', {username, password})
+        .then(response => {
+            console.log(response)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+
+    public register = async (username: string, password: string) => {
+        api.post('/auth/signup', {username, password})
         .then(response => {
             console.log(response)
         })

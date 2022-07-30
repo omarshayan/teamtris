@@ -61,7 +61,7 @@
   let username = ''
   let password = ''
 
-// events 
+// events
 
   let onUsernameInput = (e) => {
     username = e.target.value + e.key
@@ -74,11 +74,11 @@
   let onUsernameSubmit = (e) => {
 
   }
-   
+
   let onPasswordSubmit = (e) => {
     let loginInfo: string[] = [username, password]
-   
+
    // api.invoke( users().login, undefined, undefined, {username: username, password: password})
    api.login(username, password)
-  }
+}
 </script>

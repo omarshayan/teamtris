@@ -15,24 +15,8 @@
             @submit.prevent="registerUser"
           >
             <input
-              type="text"
-              id="firstName"
-              class="form-control mb-5"
-              placeholder="firstName"
-              v-model="register.firstName"
-              required
-            />
-            <input
-              type="text"
-              id="lastName"
-              class="form-control mb-5"
-              placeholder="lastName"
-              v-model="register.lastName"
-              required
-            />
-            <input
-              type="email"
-              id="email"
+              type="username"
+              id="username"
               class="form-control mb-5"
               placeholder="Email"
               v-model="register.email"
@@ -64,33 +48,55 @@
   </div>
 </template>
 <script>
-export default {
-  data() {
-    return {
-      register: {
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: ""
-      }
-    };
-  },
-  methods: {
-    async registerUser() {
-      try {
-        let response = await this.$http.post("/auth/signup", this.register);
-        console.log(response);
-        if (response) {
-          this.$router.push("/login");
-          console("Success", "Registration Was successful", "success");
-        } else {
-          console.log("Error", "Something Went Wrong", "error");
-        }
-      } catch (err) {
-        let error = err.response;
-        console.log(error);
-      }
-    }
+// export default {
+//   data() {
+//     return {
+//       register: {
+//         firstName: "",
+//         lastName: "",
+//         email: "",
+//         password: ""
+//       }
+//     };
+//   },
+//   methods: {
+//     async registerUser() {
+//       try {
+//         let response = await this.$http.post("/auth/signup", this.register);
+//         console.log(response);
+//         if (response) {
+//           this.$router.push("/login");
+//           console("Success", "Registration Was successful", "success");
+//         } else {
+//           console.log("Error", "Something Went Wrong", "error");
+//         }
+//       } catch (err) {
+//         let error = err.response;
+//         console.log(error);
+//       }
+//     }
+//   }
+// };
+
+// events
+
+  let onUsernameInput = (e) => {
+    username = e.target.value + e.key
   }
-};
+
+  let onPasswordInput = (e) => {
+    password = e.target.value + e.key
+  }
+
+  let onUsernameSubmit = (e) => {
+
+  }
+
+  let onPasswordSubmit = (e) => {
+    let loginInfo: string[] = [username, password]
+
+   // api.invoke( users().login, undefined, undefined, {username: username, password: password})
+   api.register(username, password)
+}
+
 </script>
