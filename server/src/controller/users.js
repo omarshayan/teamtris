@@ -51,14 +51,12 @@ const registerUser = async (req, res) => {
 	const hashedPassword = Utils.hashPassword(password)
 
 	const createUserQuery = `INSERT INTO
-      users(username, firstName, lastName, password, createdOn)
-      VALUES($1, $2, $3, $4, $5)
+      users(username, password, createdOn)
+      VALUES($1, $2, $3)
       returning *`
 
 	const values = [
 		username,
-		firstName,
-		lastName,
 		hashedPassword,
 		createdOn,
 	]

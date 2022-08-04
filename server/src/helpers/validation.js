@@ -54,6 +54,7 @@ const empty = (input) => {
 }
 
 const createUser = async (req, res, next) => {
+	console.log('creating user')
 	const schema = Joi.object({
 		username: Joi.string().required(),
 		password: Joi.string().required(),

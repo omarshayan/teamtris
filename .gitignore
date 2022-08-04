@@ -8,12 +8,16 @@ yarn.lock*
 package-lock.json
 Cargo.lock
 
+#pgadmin
+pgadmin4
+
+#keys
 private.key
 public.key
 jwtRS256.key
 jwtRS256.key.pub
-# Runtime data
 
+# Runtime data
 pids
 *.pid
 *.seed

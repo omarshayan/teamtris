@@ -14,7 +14,7 @@
             style="margin-top:70px;height:auto;padding-top:100px !important;"
             @submit.prevent="loginUser"
           >
-              <Input
+            <Input
               ref='username'
               type="text"
               id="username"
@@ -38,11 +38,9 @@
               <router-link to="/register"> here </router-link> to sign up
             </p>
             <!-- Sign in button -->
-            <center>
               <button class="btn btn-primary btn-block w-75 my-4" type="submit">
                 Sign in
               </button>
-            </center>
           </form>
         </div>
       </div>
@@ -64,11 +62,11 @@
 // events
 
   let onUsernameInput = (e) => {
-    username = e.target.value + e.key
+    username = e.target.value
   }
 
   let onPasswordInput = (e) => {
-    password = e.target.value + e.key
+    password = e.target.value
   }
 
   let onUsernameSubmit = (e) => {

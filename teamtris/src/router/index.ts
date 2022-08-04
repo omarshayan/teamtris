@@ -8,9 +8,9 @@ import SoloGame from '../views/SoloGame.vue'
 import Settings from '../views/Settings.vue'
 import Host     from '../views/Host.vue'
 import Guest    from '../views/Guest.vue'
-import login    from '../views/login.vue'
+import Login    from '../views/Login.vue'
+import Register    from '../views/Register.vue'
 
-import register    from '../views/register.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -23,13 +23,13 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: login,
+      component: Login,
       meta: {transition: 'slide-left'} 
     },
     {
       path: '/register',
       name: 'register',
-      component: register,
+      component: Register,
       meta: {transition: 'slide-left'}
     },
     {

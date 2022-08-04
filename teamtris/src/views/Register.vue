@@ -14,32 +14,34 @@
             style="margin-top:70px;height:auto;padding-top:100px !important;"
             @submit.prevent="registerUser"
           >
-            <input
-              type="username"
+            <Input
+              ref='username'
+              type="text"
               id="username"
               class="form-control mb-5"
-              placeholder="Email"
-              v-model="register.email"
-              required
+              placeholder="username"
+              @keydown:input="onUsernameInput"
+              @on-submit:input="onUsernameSubmit"
             />
-            <input
+            <!-- Password -->
+            <Input
+              ref='password'
               type="password"
               id="password"
               class="form-control mb-5"
-              placeholder="Password"
-              v-model="register.password"
+              placeholder="password"
+              @on-submit:input="onPasswordSubmit"
+              @keydown:input="onPasswordInput"
             />
             <p>
               Already have an account? Click
               <router-link to="/login">here</router-link> to sign in
-              <center>
                 <button
                   class="btn btn-primary btn-block w-75 my-4"
                   type="submit"
                 >
                   Sign up
                 </button>
-              </center>
             </p>
           </form>
         </div>
@@ -47,45 +49,29 @@
     </b-card>
   </div>
 </template>
-<script>
-// export default {
-//   data() {
-//     return {
-//       register: {
-//         firstName: "",
-//         lastName: "",
-//         email: "",
-//         password: ""
-//       }
-//     };
-//   },
-//   methods: {
-//     async registerUser() {
-//       try {
-//         let response = await this.$http.post("/auth/signup", this.register);
-//         console.log(response);
-//         if (response) {
-//           this.$router.push("/login");
-//           console("Success", "Registration Was successful", "success");
-//         } else {
-//           console.log("Error", "Something Went Wrong", "error");
-//         }
-//       } catch (err) {
-//         let error = err.response;
-//         console.log(error);
-//       }
-//     }
-//   }
-// };
+<script setup lang='ts'>
+
 
 // events
 
+  import api from '@/api/api'
+  import { reactive } from 'vue'
+  import Input from '@/components/elements/Input.vue'
+
+  const register = reactive({ 
+    username: '',
+    password: ''
+  })
+
+  let username: string
+  let password: string
+
   let onUsernameInput = (e) => {
-    username = e.target.value + e.key
+    username = e.target.value
   }
 
   let onPasswordInput = (e) => {
-    password = e.target.value + e.key
+    password = e.target.value
   }
 
   let onUsernameSubmit = (e) => {
@@ -94,9 +80,9 @@
 
   let onPasswordSubmit = (e) => {
     let loginInfo: string[] = [username, password]
-
-   // api.invoke( users().login, undefined, undefined, {username: username, password: password})
-   api.register(username, password)
-}
+    console.log('submitting password')
+    // api.invoke( users().login, undefined, undefined, {username: username, password: password})
+    api.register(username, password)
+  }
 
 </script>
