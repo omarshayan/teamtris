@@ -38,14 +38,22 @@ class fetchAPI {
         })
     }
 
-    public register = async (username: string, password: string) => {
-        api.post('/auth/signup', {username, password})
+    public register = async (username: string, password: string): Promise<any> => {
+        var res
+        await api.post('/auth/signup', {username, password})
         .then(response => {
+            console.log('logging response')
+
             console.log(response)
+            res = response
         })
         .catch(error => {
-          console.log(error)
+            console.log('logging error')
+            console.log(error)
+            res = error
         })
+
+        return res
     }
 }
 

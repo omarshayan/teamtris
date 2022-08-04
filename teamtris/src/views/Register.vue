@@ -15,25 +15,22 @@
             @submit.prevent="registerUser"
           >
             <Input
-              ref='username'
               type="text"
               id="username"
               class="form-control mb-5"
               placeholder="username"
-              @keydown:input="onUsernameInput"
-              @on-submit:input="onUsernameSubmit"
               v-model="usernametext"
             />
             <!-- Password -->
             <Input
-              ref='password'
               type="password"
               id="password"
               class="form-control mb-5"
               placeholder="password"
-              @on-submit:input="onPasswordSubmit"
-              @keydown:input="onPasswordInput"
               v-model="passwordtext"
+            />
+            <ValidationMessage
+              v-if="formError"
             />
             <p>
               Already have an account? Click
@@ -58,42 +55,43 @@
 // events
 
   import api from '@/api/api'
-  import { ref, reactive } from 'vue'
+  import { ref, reactive, useCssVars } from 'vue'
   import Input from '@/components/elements/Input.vue'
+  import ValidationMessage from '@/components/elements/ValidationMessage.vue'
   import Button from '@/components/elements/Button.vue'
 
-  const register = reactive({ 
-    username: '',
-    password: ''
-  })
 
+  let formValidation = reactive({ 
+    usernameError: '',
+    passwordError: '',
+  }) 
+
+  let formError: boolean = false
   const usernametext = ref('')
   const passwordtext = ref('')
 
-  let username: string
-  let password: string
-
-  let onUsernameInput = (e) => {
-    username = e.target.value
-  }
-
-  let onPasswordInput = (e) => {
-    password = e.target.value
-  }
 
   let onUsernameSubmit = (e) => {
 
   }
 
   let onPasswordSubmit = (e) => {
-    let loginInfo: string[] = [username, password]
     console.log('submitting password')
     // api.invoke( users().login, undefined, undefined, {username: username, password: password})
-    api.register(username, password)
   }
 
-  let onSubmit = (e) => {
-    console.log('submitting :\nusername: ', usernametext, '\npassword: ', passwordtext)
-  }
+  let onSubmit = async (e) => {
+    const user = usernametext.value
+    const pass = passwordtext.value 
+    console.log('submitting :\nusername: ', user, '\npassword: ', pass)
+    api.register(user, pass).then( (res) => {
+      console.log(res)
+      if(res.status = false){
+        formError = true
+      }
+    })
+    // const res = await api.register(user, pass)
+    // console.log
+}
 
 </script>
