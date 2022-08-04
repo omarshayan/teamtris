@@ -22,6 +22,7 @@
               placeholder="username"
               @keydown:input="onUsernameInput"
               @on-submit:input="onUsernameSubmit"
+              v-model="usernametext"
             />
             <!-- Password -->
             <Input
@@ -32,16 +33,18 @@
               placeholder="password"
               @on-submit:input="onPasswordSubmit"
               @keydown:input="onPasswordInput"
+              v-model="passwordtext"
             />
             <p>
               Already have an account? Click
               <router-link to="/login">here</router-link> to sign in
-                <button
+                <Button
+                  @on-click:button="onSubmit"
                   class="btn btn-primary btn-block w-75 my-4"
                   type="submit"
                 >
                   Sign up
-                </button>
+                </Button>
             </p>
           </form>
         </div>
@@ -55,13 +58,17 @@
 // events
 
   import api from '@/api/api'
-  import { reactive } from 'vue'
+  import { ref, reactive } from 'vue'
   import Input from '@/components/elements/Input.vue'
+  import Button from '@/components/elements/Button.vue'
 
   const register = reactive({ 
     username: '',
     password: ''
   })
+
+  const usernametext = ref('')
+  const passwordtext = ref('')
 
   let username: string
   let password: string
@@ -83,6 +90,10 @@
     console.log('submitting password')
     // api.invoke( users().login, undefined, undefined, {username: username, password: password})
     api.register(username, password)
+  }
+
+  let onSubmit = (e) => {
+    console.log('submitting :\nusername: ', usernametext, '\npassword: ', passwordtext)
   }
 
 </script>

@@ -5,8 +5,9 @@
         onMounted,
     }   from 'vue'
     const input = ref(null)
-    const emit = defineEmits(
-        ['update:input',
+    const emit = defineEmits([
+        'update:modelValue',
+        'update:input',
         'keydown:input',
         'onSubmit:input',]
     )
@@ -22,6 +23,7 @@
         input
     })
     const props = defineProps({
+        modelValue: String,
         height: Number,
         width: Number,
         maximum: Number,
@@ -68,6 +70,8 @@
     let onInputUpdate = (event) => {
         console.log('updating input ', event)
         emit('update:input', event.target.value)
+        // for v-model binding
+        emit('update:modelValue', event.target.value)
     }
 </script>
 
@@ -78,7 +82,7 @@
             class='input'
             step="1"
             :maxlength="maxlength"
-            :value="inputVal"
+            :value="modelValue"
             @input="onInputUpdate"
             @keydown="onInputKeyDown"
             :style="fontstyle"
