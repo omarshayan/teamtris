@@ -1,5 +1,5 @@
 import { EventLoopUtilityFunction } from 'perf_hooks';
-import request, { APIRequestMethod, APIResponse, APIResult, APIEndpoint } from './request';
+import request, { APIQuery, APIRequestMethod, APIResponse, APIResult, APIEndpoint } from './request';
 
 
 // helpers -------------------------------------------------------------------------------------------------------------
@@ -7,7 +7,7 @@ import request, { APIRequestMethod, APIResponse, APIResult, APIEndpoint } from '
 function appendQuery<Entity>(
     path:     string,
     pathKeys: string[],
-    query?:   string[] | null
+    query?:   APIQuery | null
 ): string {
 
     // shortcut if no query
@@ -19,6 +19,8 @@ function appendQuery<Entity>(
     const options = {...query};
     for (const key of pathKeys) {
         const val = (options as any)[key];
+        console.log('key: ', key);
+        console.log('val: ', val);
         if (val) {
             path = path.replace(new RegExp(`:${key}\\b`), val);
             delete (options as any)[key];
@@ -92,16 +94,18 @@ export default <Entity, Data>(
 
 
         // request URL
-        const url     = baseURL + '/api/v1' + appendQuery(path, pathKeys, query);
+        console.log('appending query: ');
+        console.log({path, pathKeys, query})
+        const url     = baseURL + '/api' + appendQuery(path, pathKeys, query)
 
         // log request
         const logData = data instanceof FormData
             ? '<form data>'
-            : data || '';
-        console.log('%capi request:', 'color:blue;', method.toUpperCase(), url, logData);
+            : data || ''
+        console.log('%capi request:', 'color:blue;', method.toUpperCase(), url, logData)
 
         // invoke request & parse response
-        const response = await request({url, method, data, ...params});
+        const response = await request({url, method, data, ...params})
         
         if( !response.data ){
             console.warn('API response has no data')
@@ -109,9 +113,8 @@ export default <Entity, Data>(
         const result = massageResponse<Data>(response)
 
 
-        const elapsed = (Date.now() - startTime) + 'ms';
-        const style = result.success ? 'color:green' : 'color:red';
-        console.log('%capi result:', style, result, elapsed);
+        const elapsed = (Date.now() - startTime) + 'ms'
+        const style = result.success ? 'color:green' : 'color:red'
 
         return result;
     }

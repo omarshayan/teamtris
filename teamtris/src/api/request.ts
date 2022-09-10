@@ -14,6 +14,13 @@ export enum APIRequestMethod {
     delete = 'delete',
 }
 
+
+export interface APIQuery {
+    id?:       string;
+    code?:     string;
+}
+
+
 export interface APIRequestParams {
     url?:                string;
     method?:             APIRequestMethod;
@@ -58,7 +65,7 @@ export type APIResult<Data> = APIResultSuccess<Data> | APIResultFailure;
 export type APIEndpoint<Entity, Data> =
     (
         token?:  string,
-        query?:  string[],
+        query?:  APIQuery,
         data?:   any,
         params?: APIRequestParams
     ) => Promise<APIResult<Data>>;

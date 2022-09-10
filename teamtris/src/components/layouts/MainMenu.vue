@@ -6,6 +6,8 @@
     import lobbyAPI, { Lobby } from '@/api/data/lobby'
     import { useStore } from '@/store/store'
 
+    import api from '@/api/api'
+
     
     const router = useRouter()
 
@@ -28,7 +30,7 @@
         console.log(e)
         // validate alphanumeric and length?
         // check if a lobby exists with that connect code
-        const res = await store.state.api.invoke(lobbyAPI().byCode)
+        const res = await api.invoke(lobbyAPI().byCode, undefined, {code: e})
         let lobby: Lobby
 
         if (!res) {
@@ -36,7 +38,7 @@
             return
         }
         lobby = res
-        // show a loading screen
+        // TODO: show a loading screen
         // connect to lobby and ridirect to game
 
         if( e == lobby.code ) {

@@ -1,6 +1,7 @@
 import { EventLoopUtilityFunction } from 'perf_hooks'
 import LobbyAPI from './data/lobby'
-import request, { APIEndpoint, APIRequestMethod, APIRequestParams } from './request'
+
+import request, { APIQuery, APIEndpoint, APIRequestMethod, APIRequestParams } from './request'
 import { AxiosInstance } from 'axios'
 import { api } from './utils/axios'
 
@@ -19,13 +20,16 @@ class fetchAPI {
 
     }
 
-    public async invoke<Entity, Data>(endpoint: APIEndpoint<Entity, Data>, token?: string | undefined, query?: string[], data?: any, params?: APIRequestParams) {
+    public async invoke<Entity, Data>(endpoint: APIEndpoint<Entity, Data>, token?: string | undefined, query?: APIQuery, data?: any, params?: APIRequestParams) {
             const result = await endpoint(token, query, data, params)
             console.log('invocation result: ', result)
-            if (result.success){
-                return result.data
-            }
-            else return
+
+            // TODO: format api results 
+            // if (result.success){
+            //     return result.data
+            // }
+            // else return
+            return result
     }
 
     public login = async (username: string, password: string) => {
