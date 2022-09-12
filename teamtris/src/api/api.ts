@@ -4,6 +4,7 @@ import LobbyAPI from './data/lobby'
 import request, { APIQuery, APIEndpoint, APIRequestMethod, APIRequestParams } from './request'
 import { AxiosInstance } from 'axios'
 import { api } from './utils/axios'
+import user from './data/user'
 
 class fetchAPI {
 
@@ -32,13 +33,20 @@ class fetchAPI {
             return result
     }
 
-    public login = async (username: string, password: string) => {
-        api.post('/auth/login', {username, password})
+    public login = async (username: string, password: string): Promise<any> => {
+        var res
+        await api.post('/auth/login', {username, password})
         .then(response => {
             console.log(response)
+
+            const user = response.data.data.user
+
+            console.log(user)
+            return user
         })
         .catch(error => {
           console.log(error)
+          res = error
         })
     }
 

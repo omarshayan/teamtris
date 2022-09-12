@@ -92,6 +92,8 @@ const loginUser = async (req, res) => {
 	const { username, password } = req.body
 
 	if (isEmpty(username) || isEmpty(password)) {
+		console.log('username or Password detail is missing')
+
 		return Response.sendErrorResponse({
 			res,
 			message: 'username or Password detail is missing',
@@ -100,6 +102,11 @@ const loginUser = async (req, res) => {
 	}
 
 	if (!isValidUsername(username) || !validatePassword(password)) {
+		console.log('Please enter a valid username or Password')
+		console.log(isValidUsername(username))
+		console.log(validatePassword(password))
+
+
 		return Response.sendErrorResponse({
 			res,
 			message: 'Please enter a valid username or Password',

@@ -1,17 +1,18 @@
+import { User } from '@/api/data/user'
+
 export interface UserState {
-    name: string
+  data: User | null
 }
 
 export default {
 
-
   state: () => ({
-      name: ''
-  }) ,
+    data: null
+  }),
+
   mutations: {
-    set: function (state: UserState, payload: string) {
-      state.name = payload;
+    login: function (state: UserState, payload: User) {
+      state.data = payload;
     }
   },
-
 }

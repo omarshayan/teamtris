@@ -14,7 +14,7 @@
 </template>
 
 <style>
-    @import '@/assets/menu.css';
+    @import '@/assets/css/menu.css';
     @font-face {
     font-family: 'Floppy Pixel Regular';
     src: url('/src/assets/fonts/Floppy Pixel Regular');

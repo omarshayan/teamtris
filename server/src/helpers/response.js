@@ -5,8 +5,8 @@
 	}) => {
 		res.status(statusCode).send({
 			data: responseBody,
-			status: true,
-			message,
+			status: statusCode,
+			success: true,
 		})
 	}
 

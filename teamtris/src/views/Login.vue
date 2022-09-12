@@ -50,11 +50,16 @@
 <script setup lang='ts'>
   import Input from '@/components/elements/Input.vue'
   import { useStore } from '@/store/store';
+  import { useRouter } from 'vue-router';
   import { ref } from 'vue'
   import api from '@/api/api';
-  import users from '@/api/data/user'
+  import users, {User, Auth} from '@/api/data/user'
 
   const store = useStore()
+      
+  const router = useRouter()
+
+  let formError: boolean = false
 
   let username = ''
   let password = ''
@@ -73,10 +78,24 @@
 
   }
 
-  let onPasswordSubmit = (e) => {
+  let onPasswordSubmit = async (e) => {
     let loginInfo: string[] = [username, password]
+    console.log('loggin in')
 
-   // api.invoke( users().login, undefined, undefined, {username: username, password: password})
-   api.login(username, password)
+
+    const res = await api.invoke( users().login, undefined, undefined, {username: username, password: password})
+    console.log(res)
+    if(!res.success){
+      formError = true
+      console.log('res error')
+      return
+    }
+
+    const user = res.data.user
+    store.commit('login', user)
+
+    router.push('/')
+
+
 }
 </script>

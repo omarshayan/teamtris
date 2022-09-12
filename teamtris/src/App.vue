@@ -16,7 +16,7 @@ console.log(import.meta.env)
 </template>
 
 <style>
-@import '@/assets/base.css';
+@import '@/assets/css/base.css';
 @font-face {
     font-family: 'Floppy Pixel Regular';
     src: url('/src/assets/fonts/Floppy Pixel Regular');

@@ -98,5 +98,5 @@
    </div>
 </template>
 <style scoped>
-@import '@/assets/game.css';
+@import '@/assets/css/game.css';
 </style>

@@ -91,7 +91,7 @@
 </template>
 
 <style scoped>
-/* @import '@/assets/settings.css' */
+/* @import '@/assets/css/settings.css' */
     *, *::before, *::after {
     box-sizing: border-box;
     }

@@ -13,5 +13,5 @@ export default {
   </main>
 </template>
 <style>
-@import '@/assets/menu.css';
+@import '@/assets/css/menu.css';
 </style>

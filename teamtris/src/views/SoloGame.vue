@@ -5,5 +5,5 @@
   <Game :num-lines="40"></Game>
 </template>
 <style scoped>
-@import '@/assets/game.css';
+@import '@/assets/css/game.css';
 </style>

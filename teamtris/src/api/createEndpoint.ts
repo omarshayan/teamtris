@@ -1,5 +1,5 @@
 import { EventLoopUtilityFunction } from 'perf_hooks';
-import request, { APIQuery, APIRequestMethod, APIResponse, APIResult, APIEndpoint } from './request';
+import request, { APIQuery, APIRequestMethod, APIResponse, APIResult, APIResultSuccess, APIEndpoint } from './request';
 
 
 // helpers -------------------------------------------------------------------------------------------------------------
@@ -42,9 +42,7 @@ function appendQuery<Entity>(
 function massageResponse<Data>(response: APIResponse): APIResult<Data> {
 
     if (response.data) {
-        return {
-            ...response.data as any,
-        };
+        return response.data as APIResultSuccess<Data>;
     }
 
     let message  = 'Request failed';
@@ -96,7 +94,7 @@ export default <Entity, Data>(
         // request URL
         console.log('appending query: ');
         console.log({path, pathKeys, query})
-        const url     = baseURL + '/api' + appendQuery(path, pathKeys, query)
+        const url     = baseURL + '/api/v1' + appendQuery(path, pathKeys, query)
 
         // log request
         const logData = data instanceof FormData

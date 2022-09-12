@@ -18,6 +18,8 @@ export enum APIRequestMethod {
 export interface APIQuery {
     id?:       string;
     code?:     string;
+    username?: string;
+    password?: string;
 }
 
 
@@ -47,13 +49,13 @@ export interface APIResultBase<Status, Success> {
     path?:       string;
     status:      Status;
     success:     Success;
-    notice?:     string;
+    message?:     string;
     warning?:    string;
-    error:       string;
+    error?:       string;
 }
 
 export interface APIResultSuccess<Data> extends APIResultBase<200, true> {
-    type:        string;
+    type?:        string;
     data:        Data;
     session?:    Session;
 }

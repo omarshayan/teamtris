@@ -106,5 +106,5 @@
 .input {
     width: 60px
 }
-/* @import '@/assets/settings.css'; */
+/* @import '@/assets/css/settings.css'; */
 </style>
