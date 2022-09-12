@@ -13,6 +13,8 @@
   import Timer from '@/components/elements/Timer.vue'
   import LineCounter from '@/components/elements/LineCounter.vue'
 
+  import api from '@/api/api'
+
   const props = defineProps<{
     numLines: number,
     isHost: boolean,
@@ -34,9 +36,9 @@
     game: null
   })
 
-  
+
   // events
-  
+
 
   let goToMainMenu = () => {
     router.push('/')
@@ -49,6 +51,10 @@
   let startGame = (game: Game) => {
       console.log('startnig game...')
       localstate.game?.start()
+  }
+
+  let submitScore = (score: number) => {
+    api.invoke()
   }
 
   onMounted(() => {
@@ -70,7 +76,7 @@
       if(props.isHost) {
         p2p.setup(props.isHost, localstate.game, onLobbyJoin)
       }
-      else if (!props.isHost) { 
+      else if (!props.isHost) {
         p2p.setup(props.isHost, localstate.game, onLobbyJoin, props.connectCode)
       }
 
