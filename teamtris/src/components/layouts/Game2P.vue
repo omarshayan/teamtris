@@ -14,6 +14,7 @@
   import LineCounter from '@/components/elements/LineCounter.vue'
 
   import api from '@/api/api'
+  import score from '@/api/data/score'
 
   const props = defineProps<{
     numLines: number,
@@ -54,7 +55,15 @@
   }
 
   let submitScore = (score: number) => {
-    api.invoke()
+
+    const me = store.state.user.data.username
+    
+    const scoreToSubmit = {}
+    const res = await api.invoke(score().submit, undefined, undefined, { })
+    if (!res) {
+        console.warn('couln\'nt query score api')
+        return
+    }
   }
 
   onMounted(() => {
