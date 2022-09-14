@@ -17,6 +17,9 @@
   import api from '@/api/api'
   import score from '@/api/data/score'
 
+  import api from '@/api/api'
+  import score from '@/api/data/score'
+
   const props = defineProps<{
     numLines: number,
     isHost: boolean,
@@ -56,6 +59,18 @@
       console.log('connectcode: ', code)
       navigator.clipboard.writeText(code.value!)
       // localstate.game?.start()
+  }
+
+  let submitScore = (score: number) => {
+
+    const me = store.state.user.data.username
+    
+    const scoreToSubmit = {}
+    const res = await api.invoke(score().submit, undefined, undefined, { })
+    if (!res) {
+        console.warn('couln\'nt query score api')
+        return
+    }
   }
 
   let submitScore = (score: number) => {
