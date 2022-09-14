@@ -6,8 +6,12 @@ import SimplePeer, {SignalData} from 'simple-peer'
 import Message from "./messenger"
 import Game2P from "./game2p"
 
+import { Ref } from 'vue'
 import { GameState } from '@/store/game'
+import { Store } from 'vuex'
+import { useStore, State }  from '@/store/store'
 
+// TODO: renmae this to websocketConnection (which is repsonsible for setting up P2P)
 export default class P2P {
 
     game: Game2P
@@ -16,14 +20,18 @@ export default class P2P {
     socket: WebSocket | null
     wssUrl: string
     onConnect: (game: Game2P) => void
+    connectCode: Ref<string | undefined>
+    store: Store<State>
 
-    constructor(isHost: boolean, game: Game2P, onConnect: (game: Game2P) => void) {
+    constructor(isHost: boolean, game: Game2P, onConnect: (game: Game2P) => void, connectCode: Ref<string | undefined>) {
         this.game = game
         this.isHost = isHost
         this.onConnect = onConnect
         this.wssUrl = import.meta.env.VITE_WEBSOCKET_SERVER_URL
         this.peer = null
         this.socket = null
+        this.connectCode = connectCode
+        this.store = useStore()
     }
 
     private connect2socket(): WebSocket {
@@ -69,20 +77,22 @@ export default class P2P {
 
 
 
-        if(message.metadata == "new lobby"){
+        if (message.metadata == "lobby info"){
             let lobby = JSON.parse(message.content)
             console.log('lobby code ' ,lobby.code)
             console.log( lobby.code )
-
+            this.connectCode!.value = lobby.code
+            console.log("this connectcode value ", this.connectCode!.value)
         }
 
-        if(message.metadata == "lobby ready"){
+        if (message.metadata == "lobby ready"){
             let peer = new SimplePeer({initiator: true, trickle: false})
             this.peer = peer
             console.log("LOBBY READY TO START!")
-            console.log( "A player has joined the lobbert. \nInitiating P2P...")
-    
-            console.log(this.peer)
+
+            console.log("lobby: ", message.content)
+
+            this.store.commit('updatePlayerList', message.content)
             this.peer.on('signal', (data: string | undefined) => {
                 console.log('signalling!')
                 const P2Pdata = new Message("host", "p2p data", data)
@@ -91,7 +101,7 @@ export default class P2P {
             })
         }
 
-        if(message.metadata == 'remote p2p data'){
+        if (message.metadata == 'remote p2p data'){
             let msgblob = event.data
             const msgstring = await(new Response(msgblob)).text()
             const message = JSON.parse(msgstring)
@@ -127,9 +137,6 @@ export default class P2P {
         console.log(import.meta.env) 
         console.log(import.meta.env.VITE_WEBSOCKET_SERVER_URL) 
         this.socket = this.connect2socket()
-
-
-
             
         this.socket.onopen = (event) => {
             console.log('socket opened from host!')

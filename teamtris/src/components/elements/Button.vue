@@ -3,11 +3,17 @@
         'on-click:button',
         'on-hover:button',
     ])
+
+    const props = defineProps({
+        type: String
+    })
+
 </script>
 
 <template>
     <button
         @click="$emit('on-click:button')"
+        :class="props.type? props.type : 'default'"
     >
         <slot></slot>
     </button>
@@ -26,10 +32,17 @@
     font-style: normal;
    }
 
-    button {
+    .default {
         height: 40px;
         font-size: 30px;
         color: white;
+        background-color: black;
+    }
+
+    .code {
+        height: 40px;
+        font-size: 30px;
+        color: greenyellow;
         background-color: black;
     }
 </style>

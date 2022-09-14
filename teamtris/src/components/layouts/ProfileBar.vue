@@ -47,5 +47,5 @@
 
 
 <style scoped>
-    @import '@/assets/css/profilebar'
+    @import '@/assets/css/profilebar.css'
 </style>

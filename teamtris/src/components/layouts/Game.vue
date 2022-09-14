@@ -6,7 +6,6 @@
   import Renderer from '@/composables/game/graphics'
   import Game from '@/composables/game/game'
   import Game2P from '@/composables/game/game2p'
-  import P2P from '@/composables/game/p2p'
   import ConfigState from '@/store/config'
   import { useStore } from '@/store/store'
   import router from '@/router'

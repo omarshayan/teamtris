@@ -47,11 +47,11 @@ app.get('/', (req, res) => {
     res.send('welcome to the server bitch')
 })
 
-app.get('/api/lobbies', (req, res) => {
+app.get('/api/v1/lobbies', (req, res) => {
     res.send(lobby_list)
 })
 
-app.get('/api/lobbies/:code', (req, res) => {
+app.get('/api/v1/lobbies/:code', (req, res) => {
     const lob = lobby_list.find(lob => lob.code == req.params.code);
     if (!lob) res.status(404).send(`lobby with code ${ req.params.code } does not exist`) //404
 
@@ -113,7 +113,7 @@ wss.on('connection', (socket) => {
     
                 console.log('created lobby. current lobby list: ')
                 console.log(lobby_list)
-                let new_lobby_msg = new Message("", JSON.stringify(lobby))
+                let new_lobby_msg = new Message("lobby info", JSON.stringify(lobby))
                 socket.send(JSON.stringify(new_lobby_msg))
 
             }
@@ -140,8 +140,6 @@ wss.on('connection', (socket) => {
                                 client.send(JSON.stringify(game_start))
                             }
                         }
-
-        
                     });
                 }
             }
@@ -184,7 +182,7 @@ wss.on('connection', (socket) => {
                                 // client.send(data);
                                 console.log("msging user with id " +  client.id + " in lobby " + lobby.code )
                                 console.log("making a message:" )
-                                let lobby_ready = new Message("lobby ready", undefined)
+                                let lobby_ready = new Message("lobby ready", lobby)
                                 client.send(JSON.stringify(lobby_ready))
                             }
                         }

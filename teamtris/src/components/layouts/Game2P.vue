@@ -12,6 +12,7 @@
   import router from '@/router'
   import Timer from '@/components/elements/Timer.vue'
   import LineCounter from '@/components/elements/LineCounter.vue'
+  import ConnectCodeScreen from '../elements/ConnectCodeScreen.vue'
 
   const props = defineProps<{
     numLines: number,
@@ -21,6 +22,7 @@
 
   const store = useStore()
 
+  const code = ref<string | undefined>()
   const timer = ref<number | undefined>()
   const lineCounter = ref<number | undefined>()
   const boardCanvas = ref<HTMLCanvasElement | null>(null)
@@ -48,7 +50,9 @@
 
   let startGame = (game: Game) => {
       console.log('startnig game...')
-      localstate.game?.start()
+      console.log('connectcode: ', code)
+      navigator.clipboard.writeText(code.value!)
+      // localstate.game?.start()
   }
 
   onMounted(() => {
@@ -65,7 +69,7 @@
 
 
       localstate.game = new Game2P(timer, lineCounter, configuration, renderer, props.isHost) as Game2P
-      const p2p = new P2P(props.isHost, localstate.game, onLobbyJoin)
+      const p2p = new P2P(props.isHost, localstate.game, onLobbyJoin, code)
       console.log("two player game")
       if(props.isHost) {
         p2p.setup(props.isHost, localstate.game, onLobbyJoin)
@@ -73,6 +77,8 @@
       else if (!props.isHost) { 
         p2p.setup(props.isHost, localstate.game, onLobbyJoin, props.connectCode)
       }
+
+    
 
   })
 
@@ -82,7 +88,7 @@
     <div class='box'>
       <div class='l-ui'>
         <canvas ref='holdCanvas' id='hold-canvas' :width='159' :height='96'></canvas>
-        <p id=FPS>-1</p>
+        <ConnectCodeScreen><template #code>{{ code }}</template></ConnectCodeScreen>
         <Button :style="{ margin: '10px' }" @on-click:button="startGame">start!</Button>
         <Button :style="{ margin: '10px' }" @on-click:button="goToMainMenu">back</Button>
 
