@@ -181,6 +181,29 @@ const me = async (req, res) => {
 	}
 }
 
+const getUser = async (req, res) => {
+	try {
+		return Response.sendResponse({
+			res,
+			message: 'User details successfully fetched',
+			responseBody: {
+				firstName: res.user.firstname,
+				username: res.user.username,
+				lastName: res.user.lastname,
+				token: res.token,
+				id: res.user.id,
+			},
+		})
+	} catch (error) {
+		console.log(error)
+		return Response.sendErrorResponse({
+			res,
+			message: 'Unable to fetch currently logged in user detail',
+			statusCode: 400,
+		})
+	}
+}
+
 module.exports = {
 	registerUser,
 	loginUser,

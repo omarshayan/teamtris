@@ -5,9 +5,9 @@ export default class Message {
     sender: string
     role: string
     metadata: string
-    content: string | null
+    content: any | null
 
-    constructor(role: string, metadata: string, content?: string) {
+    constructor(role: string, metadata: string, content?: any) {
         this.role = role
         this.metadata = metadata
         this.content = content? content : null

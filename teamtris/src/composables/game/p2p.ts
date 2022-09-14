@@ -136,6 +136,8 @@ export default class P2P {
         
         console.log(import.meta.env) 
         console.log(import.meta.env.VITE_WEBSOCKET_SERVER_URL) 
+
+        const userId = this.store.state.user.data? this.store.state.user.data.id : null;
         this.socket = this.connect2socket()
             
         this.socket.onopen = (event) => {
@@ -145,7 +147,7 @@ export default class P2P {
             //     role: "host",
             //     content: "hello"
             // }
-            let message = new Message("host", "hello")
+            let message = new Message("host", "hello", userId)
             this.socket!.send(JSON.stringify(message))
         }
     
@@ -155,7 +157,7 @@ export default class P2P {
      async Guest(peer: SimplePeer.Instance, game: Game2P, onConnect: (game: Game2P) => void, connectCode: string): Promise<void> {
     
         var socket = await this.connect2socket()
-    
+        const id = this.store.state.user.data?.id;
 
         socket.onopen = function (event) {
             console.log('socket opened from guest!')
@@ -165,8 +167,8 @@ export default class P2P {
             //     content: "add me to the lobby",
             //     code: connect_code
             // }
-    
-            let message = new Message("guest", "add me to lobby", connectCode)
+
+            let message = new Message("guest", "add me to lobby", {connectCode, id})
             socket.send(JSON.stringify(message))
         }
     

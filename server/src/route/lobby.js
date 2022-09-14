@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 
 const express = require('express')
-const { registerUser, loginUser, me } = require('../controller/users.js')
+const { registerUser, loginUser, me, getUser } = require('../controller/users.js')
 
 const  {
  createUser,
@@ -17,5 +17,6 @@ const router = express.Router()
 router.post('/auth/signup', createUser, registerUser)
 router.post('/auth/login', loginUser)
 router.get('/me', decodeHeader, me)
+router.get('/users/:id', getUser)
 
 module.exports = router

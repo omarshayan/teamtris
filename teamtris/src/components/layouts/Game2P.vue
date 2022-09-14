@@ -17,9 +17,6 @@
   import api from '@/api/api'
   import score from '@/api/data/score'
 
-  import api from '@/api/api'
-  import score from '@/api/data/score'
-
   const props = defineProps<{
     numLines: number,
     isHost: boolean,
@@ -56,34 +53,27 @@
 
   let startGame = (game: Game) => {
       console.log('startnig game...')
-      console.log('connectcode: ', code)
-      navigator.clipboard.writeText(code.value!)
+
       // localstate.game?.start()
   }
 
-  let submitScore = (score: number) => {
-
-    const me = store.state.user.data.username
-    
-    const scoreToSubmit = {}
-    const res = await api.invoke(score().submit, undefined, undefined, { })
-    if (!res) {
-        console.warn('couln\'nt query score api')
-        return
-    }
+  let copyConnectcode = () => { 
+      console.log('connectcode: ', code)
+      navigator.clipboard.writeText(code.value!)
   }
 
-  let submitScore = (score: number) => {
 
-    const me = store.state.user.data.username
+  // let submitScore = (score: number) => {
+
+  //   const me = store.state.user.data!.username
     
-    const scoreToSubmit = {}
-    const res = await api.invoke(score().submit, undefined, undefined, { })
-    if (!res) {
-        console.warn('couln\'nt query score api')
-        return
-    }
-  }
+  //   const scoreToSubmit = {}
+  //   const res = await api.invoke(score().submit, undefined, undefined, { })
+  //   if (!res) {
+  //       console.warn('couln\'nt query score api')
+  //       return
+  //   }
+  // }
 
   onMounted(() => {
     console.log('board canvas: ', boardCanvas)
@@ -118,7 +108,7 @@
     <div class='box'>
       <div class='l-ui'>
         <canvas ref='holdCanvas' id='hold-canvas' :width='159' :height='96'></canvas>
-        <ConnectCodeScreen><template #code>{{ code }}</template></ConnectCodeScreen>
+        <ConnectCodeScreen @on-click:text="copyConnectcode"><template #code>{{ code }}</template></ConnectCodeScreen>
         <Button :style="{ margin: '10px' }" @on-click:button="startGame">start!</Button>
         <Button :style="{ margin: '10px' }" @on-click:button="goToMainMenu">back</Button>
 

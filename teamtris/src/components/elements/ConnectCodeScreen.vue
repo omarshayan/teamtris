@@ -4,7 +4,7 @@
 
 <template>
     <div>lobby code:</div><br/>
-    <Button :type="'code'">
+    <Button @on-click:button="" :type="'code'">
         <slot name="code"></slot>
     </Button>
 </template>

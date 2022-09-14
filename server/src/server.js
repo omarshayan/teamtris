@@ -18,6 +18,14 @@ class Message {
 }
 
 
+function Player(id, socketId){
+    this.id = id
+    this.socketId = socketId
+}
+
+
+
+
 let lobby_list = []
 
 const app = express()
@@ -43,7 +51,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 app.use('/api/v1', usersRoute)
-appuse('/api/v1', scoresRoute)
+app.use('/api/v1', scoresRoute)
 app.get('/', (req, res) => {
     res.send('welcome to the server bitch')
 })
@@ -82,16 +90,16 @@ wss.on('connection', (socket) => {
             //find sender's lobby
             let lobby = lobby_list.find(function(lob){
                 console.log("checking a lobby with code " + lob.code)
-                return lob.players.includes(socket.id)
+                return lob.players.map((player) => player.socketId).includes(socket.id)
             })
 
             //find remote users' id
 
-            let remote_players = lobby.players.filter(function(playerid){return playerid != socket.id})
+            let remote_players = lobby.players.filter(function(player){return player.socketId != socket.id})
 
 
             wss.clients.forEach(function each(client) {
-                if(remote_players.find(function(playerid){return playerid == client.id})){
+                if(remote_players.find(function(player){return player.socketId == client.id})){
                     if (client.readyState === WebSocket.OPEN) {
                         // client.send(data);
                         console.log("msging user with id " +  client.id + " in lobby " + lobby.code )
@@ -108,7 +116,8 @@ wss.on('connection', (socket) => {
             if(message.metadata == "hello"){
                 console.log("message from host")
                 let lobby = createLobby(lobby_list, socket.id)
-                lobby.players.push(socket.id)
+                let hostId = message.content
+                lobby.players.push(new Player(hostId, socket.id))
                 lobby_list.push(lobby)
 
 
@@ -132,7 +141,7 @@ wss.on('connection', (socket) => {
                     console.log("host requesting gamestart")
                     wss.clients.forEach(function each(client) {
                         console.log("trying to message player with id " + client.id)
-                        if(lobby.players.find(function(playerid){return playerid == client.id})){
+                        if(lobby.players.find(function(player){return player.socketId == client.id})){
                             if (client.readyState === WebSocket.OPEN) {
                                 // client.send(data);
                                 console.log("msging user with id " +  client.id + " in lobby " + lobby.code )
@@ -156,7 +165,7 @@ wss.on('connection', (socket) => {
 
 
             if(message.metadata == "add me to lobby"){
-                let lobbycode = message.content
+                let lobbycode = message.content.connectCode
                 console.log("guest trying to connect to room with code " + lobbycode)
                 let lobby = null
                 console.log("looking for lobby with code" + lobbycode)
@@ -174,20 +183,28 @@ wss.on('connection', (socket) => {
                     //if a lobby with that code exists...
 
                     //add the guest to it
-                    lobby.players.push(socket.id)
+                    lobby.players.push(new Player(message.content.id, socket.id))
 
                     console.log("lobby players: "  + lobby.players)
                     //then message everyone in the lobby that a guest has connected!
                     wss.clients.forEach(function each(client) {
                         console.log("trying to message player with id " + client.id)
-                        if(lobby.players.find(function(playerid){return playerid == client.id})){
-                            if (client.readyState === WebSocket.OPEN) {
-                                // client.send(data);
-                                console.log("msging user with id " +  client.id + " in lobby " + lobby.code )
-                                console.log("making a message:" )
-                                let lobby_ready = new Message("lobby ready", lobby)
-                                client.send(JSON.stringify(lobby_ready))
-                            }
+                        // if(lobby.players.find(function(player){return player.socketId == client.id})){
+                        //     if (client.readyState === WebSocket.OPEN) {
+                        //         // client.send(data);
+                        //         console.log("msging user with id " +  client.id + " in lobby " + lobby.code )
+                        //         console.log("making a message:" )
+                        //         let lobby_ready = new Message("lobby ready", lobby)
+                        //         client.send(JSON.stringify(lobby_ready))
+                        //     }
+                        // }
+
+                        if (client.readyState === WebSocket.OPEN) {
+                            // client.send(data);
+                            console.log("msging user with id " +  client.id + " in lobby " + lobby.code )
+                            console.log("making a message:" )
+                            let lobby_ready = new Message("lobby ready", lobby)
+                            client.send(JSON.stringify(lobby_ready))
                         }
 
 
@@ -258,16 +275,10 @@ function createLobby(lobby_list, hostsockid){
     }
 
 
-    function Player(id, peersignal){
-        this.id = id
-        this.peersignal = peersignal
-    }
-
     function Lobby(code, hostsockid){
         this.code = code
         this.hostsockid = hostsockid
         this.players = []
-        this.players.push(hostsockid)
         this.gameReady = false
     }
 
