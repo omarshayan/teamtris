@@ -1,5 +1,6 @@
 
 const usersRoute = require('./route/user')
+const scoresRoute= require('./route/score')
 
 const express = require("express")
 const WebSocket = require('ws')
@@ -42,7 +43,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 app.use('/api/v1', usersRoute)
-
+appuse('/api/v1', scoresRoute)
 app.get('/', (req, res) => {
     res.send('welcome to the server bitch')
 })
@@ -109,8 +110,8 @@ wss.on('connection', (socket) => {
                 let lobby = createLobby(lobby_list, socket.id)
                 lobby.players.push(socket.id)
                 lobby_list.push(lobby)
-    
-    
+
+
                 console.log('created lobby. current lobby list: ')
                 console.log(lobby_list)
                 let new_lobby_msg = new Message("lobby info", JSON.stringify(lobby))
@@ -119,7 +120,7 @@ wss.on('connection', (socket) => {
             }
 
             if(message.metadata == "start game"){
-                
+
                 //find host's lobby
                 let lobby = lobby_list.find(function(lob){
                     console.log("checking a lobby with code " + lob.code)
@@ -140,6 +141,8 @@ wss.on('connection', (socket) => {
                                 client.send(JSON.stringify(game_start))
                             }
                         }
+
+
                     });
                 }
             }
@@ -187,7 +190,7 @@ wss.on('connection', (socket) => {
                             }
                         }
 
-        
+
                     });
 
                 }
@@ -208,7 +211,7 @@ wss.on('connection', (socket) => {
 
         // });
     })
-    
+
     socket.on('close', (reason) => {
         console.log("socket closed because " + reason.toString())
         for(let i = 0; i < lobby_list.length; i++){
@@ -218,7 +221,7 @@ wss.on('connection', (socket) => {
                 lobby_list.splice(i--, 1);
                 console.log('updated lobby list: ')
                 console.log(lobby_list)
-                
+
             }
         }
     })
@@ -240,7 +243,7 @@ function createLobby(lobby_list, hostsockid){
         for(let i = 0; i < codelen; i++){
             code = code + alphabet.charAt(Math.trunc(Math.random()*alphabet.length))
         }
-        lobby_list.forEach(lob => 
+        lobby_list.forEach(lob =>
             {if(lob.code === code){
                 codeTaken = true;
             }
@@ -254,7 +257,7 @@ function createLobby(lobby_list, hostsockid){
         }
     }
 
-    
+
     function Player(id, peersignal){
         this.id = id
         this.peersignal = peersignal

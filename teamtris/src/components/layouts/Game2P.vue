@@ -14,6 +14,9 @@
   import LineCounter from '@/components/elements/LineCounter.vue'
   import ConnectCodeScreen from '../elements/ConnectCodeScreen.vue'
 
+  import api from '@/api/api'
+  import score from '@/api/data/score'
+
   const props = defineProps<{
     numLines: number,
     isHost: boolean,
@@ -36,9 +39,9 @@
     game: null
   })
 
-  
+
   // events
-  
+
 
   let goToMainMenu = () => {
     router.push('/')
@@ -53,6 +56,18 @@
       console.log('connectcode: ', code)
       navigator.clipboard.writeText(code.value!)
       // localstate.game?.start()
+  }
+
+  let submitScore = (score: number) => {
+
+    const me = store.state.user.data.username
+    
+    const scoreToSubmit = {}
+    const res = await api.invoke(score().submit, undefined, undefined, { })
+    if (!res) {
+        console.warn('couln\'nt query score api')
+        return
+    }
   }
 
   onMounted(() => {
@@ -74,7 +89,7 @@
       if(props.isHost) {
         p2p.setup(props.isHost, localstate.game, onLobbyJoin)
       }
-      else if (!props.isHost) { 
+      else if (!props.isHost) {
         p2p.setup(props.isHost, localstate.game, onLobbyJoin, props.connectCode)
       }
 

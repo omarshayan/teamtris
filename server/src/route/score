@@ -1,0 +1,11 @@
+/* eslint-disable indent */
+
+const express = require('express')
+const { createScore } = require('../controller/scores.js')
+
+const router = express.Router()
+
+// user Routes
+router.post('/scores/submit', createScore)
+
+module.exports = router

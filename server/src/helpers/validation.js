@@ -81,6 +81,15 @@ const createUser = async (req, res, next) => {
    */
 const comparePassword = (hashedPassword, password) => bcrypt.compareSync(password, hashedPassword)
 
+
+/**
+   * comparePassword
+   * @param {string} hashPassword
+   * @param {string} password
+   * @returns {Boolean} return True or False
+   */
+
+
 module.exports = {
 	isValidUsername,
 	validatePassword,
