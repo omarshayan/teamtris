@@ -183,20 +183,23 @@ const me = async (req, res) => {
 
 const getUser = async (req, res) => {
 
-	const { id } = req.body
+	console.log("req: ", req)
+	console.log('req params: ', req.params)
+	const id = req.params.id
 
-	const getUserQuery = `SELECT * FROM users where id = $1`
+	console.log('lookin at id ', id)
+	const getUserQuery = `SELECT * FROM users WHERE id = $1`
 
 
 	const { rows } = await dbQuery.query(getUserQuery, [id])
 
-	console.log("get user result: " + rows)
+	console.log("get user result: " + rows[0].username)
 	try {
 		return Response.sendResponse({
 			res,
 			message: 'User details successfully fetched',
 			responseBody: {
-				username: res.user.username,
+				username: rows[0].username,
 			},
 		})
 	} catch (error) {

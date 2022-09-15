@@ -20,6 +20,7 @@ export default {
             state.hostsockid = hostsockid
         },
         updatePlayerList: function(state: Lobby, playerIds: string[]) {
+            console.log('updating playerIds to ', playerIds)
             state.playerIds = playerIds
         }
     }

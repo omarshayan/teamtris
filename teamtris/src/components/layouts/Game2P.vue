@@ -15,6 +15,7 @@
   import ConnectCodeScreen from '../elements/ConnectCodeScreen.vue'
 
   import api from '@/api/api'
+  import users from '@/api/data/user'
   import score from '@/api/data/score'
 
   const props = defineProps<{
@@ -55,6 +56,14 @@
   let startGame = (game: Game) => {
       console.log('startnig game...')
 
+      console.log(store.state.lobby.playerIds)
+
+      store.state.lobby.playerIds.forEach(id => {
+        const res = api.invoke(users().info, undefined, {id: id})
+        console.log(res)
+      });
+
+      
       // localstate.game?.start()
   }
 

@@ -16,7 +16,8 @@ export interface Auth {
 }
 
 export default () => ({ 
-    info: createEndpoint<null, User>  ( APIRequestMethod.get,    '/users/me'),
+    me: createEndpoint<null, User>  ( APIRequestMethod.get,    '/user/me'),
+    info: createEndpoint<null, User>  ( APIRequestMethod.get,    '/user/:id'),
     login:   createEndpoint<null, Auth>( APIRequestMethod.post,    '/auth/login'),
     signup:  createEndpoint<null, User>( APIRequestMethod.post, '/auth/signup')
 })

@@ -88,7 +88,7 @@ export default class P2P {
             this.connectCode!.value = lobby.code
             console.log("this connectcode value ", this.connectCode!.value)
             
-            if(message.content.players){
+            if(lobby.players){
                 this.store.commit('updatePlayerList', lobby.players.map((player) => player.id))
             }
 
