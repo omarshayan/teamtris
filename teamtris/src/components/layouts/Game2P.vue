@@ -17,6 +17,8 @@
   import api from '@/api/api'
   import users from '@/api/data/user'
   import score from '@/api/data/score'
+import { watch } from 'fs'
+import PlayerList from '../elements/PlayerList.vue'
 
   const props = defineProps<{
     numLines: number,
@@ -25,7 +27,8 @@
   }>()
 
   const store = useStore()
-
+  
+  const players = ref<any[] | undefined>()
   const code = ref<string | undefined>()
   const timer = ref<number | undefined>()
   const lineCounter = ref<number | undefined>()
@@ -41,6 +44,16 @@
   })
 
 
+  store.watch(() => store.state.lobby.playerIds, (playerIds) => {
+    console.log('player id list changed')
+    players.value = store.state.lobby.playerIds.map(async (id) => {
+        const res = await api.invoke(users().info, undefined, {id: id})
+        if(res.success){
+          return res.data
+        }
+        return null;
+      });
+  })
   // events
 
 
@@ -51,6 +64,8 @@
   let onLobbyJoin = (game: Game2P) => {
       console.log('lobby joined')
       console.log('plaiyer list: ', store.state.lobby.playerIds)
+
+
   }
 
   let startGame = (game: Game) => {
@@ -58,14 +73,12 @@
 
       console.log(store.state.lobby.playerIds)
 
-      store.state.lobby.playerIds.forEach(id => {
-        const res = api.invoke(users().info, undefined, {id: id})
-        console.log(res)
-      });
+
 
       
       // localstate.game?.start()
   }
+
 
   let copyConnectcode = () => { 
       console.log('connectcode: ', code)
@@ -113,6 +126,7 @@
   })
 
 
+
 </script>
 <template>
     <div class='box'>
@@ -121,7 +135,7 @@
         <ConnectCodeScreen @on-click:text="copyConnectcode"><template #code>{{ code }}</template></ConnectCodeScreen>
         <Button :style="{ margin: '10px' }" @on-click:button="startGame">start!</Button>
         <Button :style="{ margin: '10px' }" @on-click:button="goToMainMenu">back</Button>
-
+        <PlayerList :players="players"></PlayerList>
       </div>
 	    <canvas ref='boardCanvas' id='board-canvas' :width='320' :height='736'></canvas>
       <div class='r-ui'>

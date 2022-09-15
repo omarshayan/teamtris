@@ -3,7 +3,8 @@
     import { defineProps } from 'vue';
 
     const props = defineProps<{
-        user: User
+        user?: User
+        username: string
     }>()
 
 </script>
@@ -14,7 +15,7 @@
             <img width="30" src="src/assets/questionmark.jpeg"/>
         </div>
         <div class="grid-item name">
-            {{props.user.username}}
+            {{props.username}}
         </div>
     </div>
     <div>  </div>

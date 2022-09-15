@@ -229,7 +229,7 @@ wss.on('connection', (socket) => {
         })
 
         // remove sender from lobby
-        lobby.players = lobby.filter((player) => player.socketId != socket.id)
+        lobby.players = lobby.players.filter((player) => player.socketId != socket.id)
 
         console.log("socket closed because " + reason.toString())
 
