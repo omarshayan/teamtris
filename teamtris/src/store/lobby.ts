@@ -5,7 +5,7 @@ export default {
     state: () => ({
        code: '',
        hostsockid: '',
-       players: []
+       playerIds: []
 
     // arr: number,
     // das: number,
@@ -19,8 +19,8 @@ export default {
         setHostSockID: function(state: Lobby, hostsockid: string) {
             state.hostsockid = hostsockid
         },
-        updatePlayerList: function(state: Lobby, players: User[]) {
-            state.players = players
+        updatePlayerList: function(state: Lobby, playerIds: string[]) {
+            state.playerIds = playerIds
         }
     }
 }

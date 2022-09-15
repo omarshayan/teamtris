@@ -10,6 +10,7 @@ import { Ref } from 'vue'
 import { GameState } from '@/store/game'
 import { Store } from 'vuex'
 import { useStore, State }  from '@/store/store'
+import { connect } from 'http2'
 
 // TODO: renmae this to websocketConnection (which is repsonsible for setting up P2P)
 export default class P2P {
@@ -59,8 +60,10 @@ export default class P2P {
             this.peer = peer
             
             console.log('connectcode: ', connectCode)
+            this.connectCode.value = connectCode
             if(!connectCode) {
                 console.error('guest is missing connect code')
+
             }
             await this.Guest(peer, game, onConnect, connectCode!)
     
@@ -78,21 +81,39 @@ export default class P2P {
 
 
         if (message.metadata == "lobby info"){
+        
             let lobby = JSON.parse(message.content)
             console.log('lobby code ' ,lobby.code)
             console.log( lobby.code )
             this.connectCode!.value = lobby.code
             console.log("this connectcode value ", this.connectCode!.value)
+            
+            if(message.content.players){
+                this.store.commit('updatePlayerList', lobby.players.map((player) => player.id))
+            }
+
         }
 
         if (message.metadata == "lobby ready"){
+            let lobby = message.content
+
+
             let peer = new SimplePeer({initiator: true, trickle: false})
             this.peer = peer
             console.log("LOBBY READY TO START!")
 
-            console.log("lobby: ", message.content)
+            console.log("lobby player ids: ",lobby.players.map((player) => player.id))
 
-            this.store.commit('updatePlayerList', message.content)
+            this.store.commit('updatePlayerList', lobby.players.map((player) => player.id))
+
+            
+            console.log('lobby code ' ,lobby.code)
+            console.log( lobby.code )
+            this.connectCode!.value = lobby.code
+            console.log("this connectcode value ", this.connectCode!.value)
+
+
+
             this.peer.on('signal', (data: string | undefined) => {
                 console.log('signalling!')
                 const P2Pdata = new Message("host", "p2p data", data)
@@ -117,6 +138,47 @@ export default class P2P {
             })
         }
 
+    }
+
+    public handleSocketMessageGuest = async (event: any) => {
+
+        let msgblob = event.data
+        const msgstring = await(new Response(msgblob)).text()
+        const message = JSON.parse(msgstring)
+        console.log('message from server: ')
+        console.log(message)
+
+        if(message.metadata == "lobby info"){
+            let lobby = JSON.parse(message.content)
+            console.log('lobby code ' ,lobby.code)
+            console.log( lobby.code )
+            this.connectCode!.value = lobby.code
+            
+            if(message.content.players){
+                this.store.commit('updatePlayerList', message.content.players.map((player) => player.id))
+            }
+        }
+
+        if(message.metadata == "game start"){
+            console.log(" starting game...")
+        }
+
+        if(message.metadata == "remote p2p data"){
+            console.log("got remote p2p data!")
+            console.log(message.content)
+            this.peer!.signal(message.content)
+            this.peer!.on('signal', (data: string | undefined) => {
+                const P2Pdata = new Message("guest", "p2p data", data)
+                console.log("sending guestdata to server: ")
+                this.socket!.send(JSON.stringify(P2Pdata));
+
+
+            })
+            this.game.providePeer(this.peer!)
+            this.game.waitForStart()
+            this.onConnect(this.game)
+
+        }
     }
 
     public async initiateP2P(game: Game2P): Promise<void>{
@@ -156,10 +218,10 @@ export default class P2P {
     
      async Guest(peer: SimplePeer.Instance, game: Game2P, onConnect: (game: Game2P) => void, connectCode: string): Promise<void> {
     
-        var socket = await this.connect2socket()
+        this.socket = await this.connect2socket()
         const id = this.store.state.user.data?.id;
 
-        socket.onopen = function (event) {
+        this.socket.onopen = (event) => {
             console.log('socket opened from guest!')
             // let message = {
             //     sender: "null",
@@ -169,44 +231,10 @@ export default class P2P {
             // }
 
             let message = new Message("guest", "add me to lobby", {connectCode, id})
-            socket.send(JSON.stringify(message))
+            this.socket!.send(JSON.stringify(message))
         }
     
-        socket.onmessage = async function( event) {
-    
-
-            let msgblob = event.data
-            const msgstring = await(new Response(msgblob)).text()
-            const message = JSON.parse(msgstring)
-            console.log('message from server: ')
-            console.log(message)
-    
-            if(message.metadata == "lobby ready"){
-                console.log("LOBBY READY TO START!")
-            }
-    
-            if(message.metadata == "game start"){
-                console.log(" starting game...")
-            }
-    
-            if(message.metadata == "remote p2p data"){
-                console.log("got remote p2p data!")
-                console.log(message.content)
-                peer.signal(message.content)
-                peer.on('signal', (data: string | undefined) => {
-                    const P2Pdata = new Message("guest", "p2p data", data)
-                    console.log("sending guestdata to server: ")
-                    socket.send(JSON.stringify(P2Pdata));
-    
-    
-                })
-                game.providePeer(peer)
-                game.waitForStart()
-                onConnect(game)
-
-            }
-    
-        }
+        this.socket.onmessage = this.handleSocketMessageGuest
     
     }
     

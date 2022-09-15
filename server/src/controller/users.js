@@ -182,23 +182,28 @@ const me = async (req, res) => {
 }
 
 const getUser = async (req, res) => {
+
+	const { id } = req.body
+
+	const getUserQuery = `SELECT * FROM users where id = $1`
+
+
+	const { rows } = await dbQuery.query(getUserQuery, [id])
+
+	console.log("get user result: " + rows)
 	try {
 		return Response.sendResponse({
 			res,
 			message: 'User details successfully fetched',
 			responseBody: {
-				firstName: res.user.firstname,
 				username: res.user.username,
-				lastName: res.user.lastname,
-				token: res.token,
-				id: res.user.id,
 			},
 		})
 	} catch (error) {
 		console.log(error)
 		return Response.sendErrorResponse({
 			res,
-			message: 'Unable to fetch currently logged in user detail',
+			message: 'Unable to fetch user detail',
 			statusCode: 400,
 		})
 	}
@@ -208,6 +213,7 @@ module.exports = {
 	registerUser,
 	loginUser,
 	me,
+	getUser
 }
 
 

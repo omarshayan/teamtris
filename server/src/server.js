@@ -179,7 +179,6 @@ wss.on('connection', (socket) => {
                 console.log(lobby)
 
                 if(lobby){
-                    console.log("this works")
                     //if a lobby with that code exists...
 
                     //add the guest to it
@@ -189,22 +188,14 @@ wss.on('connection', (socket) => {
                     //then message everyone in the lobby that a guest has connected!
                     wss.clients.forEach(function each(client) {
                         console.log("trying to message player with id " + client.id)
-                        // if(lobby.players.find(function(player){return player.socketId == client.id})){
-                        //     if (client.readyState === WebSocket.OPEN) {
-                        //         // client.send(data);
-                        //         console.log("msging user with id " +  client.id + " in lobby " + lobby.code )
-                        //         console.log("making a message:" )
-                        //         let lobby_ready = new Message("lobby ready", lobby)
-                        //         client.send(JSON.stringify(lobby_ready))
-                        //     }
-                        // }
-
-                        if (client.readyState === WebSocket.OPEN) {
-                            // client.send(data);
-                            console.log("msging user with id " +  client.id + " in lobby " + lobby.code )
-                            console.log("making a message:" )
-                            let lobby_ready = new Message("lobby ready", lobby)
-                            client.send(JSON.stringify(lobby_ready))
+                        if(lobby.players.find(function(player){return player.socketId == client.id})){
+                            if (client.readyState === WebSocket.OPEN) {
+                                // client.send(data);
+                                console.log("msging user with id " +  client.id + " in lobby " + lobby.code )
+                                console.log("making a message:" )
+                                let lobby_ready = new Message("lobby ready", lobby)
+                                client.send(JSON.stringify(lobby_ready))
+                            }
                         }
 
 
@@ -230,26 +221,42 @@ wss.on('connection', (socket) => {
     })
 
     socket.on('close', (reason) => {
+
+        //find sender's lobby
+        let lobby = lobby_list.find(function(lob){
+            console.log("checking a lobby with code " + lob.code)
+            return lob.players.map((player) => player.socketId).includes(socket.id)
+        })
+
+        // remove sender from lobby
+        lobby.players = lobby.filter((player) => player.socketId != socket.id)
+
         console.log("socket closed because " + reason.toString())
-        for(let i = 0; i < lobby_list.length; i++){
-            console.log(lobby_list[i].hostsockid)
-            if(socket.id == lobby_list[i].hostsockid){
-                console.log("host closed lobby with code: " + lobby_list[i].code)
-                lobby_list.splice(i--, 1);
-                console.log('updated lobby list: ')
-                console.log(lobby_list)
 
+        //then message everyone in the lobby that a guest has connected!
+        wss.clients.forEach(function each(client) {
+            console.log("trying to message player with id " + client.id)
+            if(lobby.players.find(function(player){return player.socketId == client.id})){
+                if (client.readyState === WebSocket.OPEN) {
+                    // client.send(data);
+                    console.log("msging user with id " +  client.id + " in lobby " + lobby.code )
+                    console.log("making a message:" )
+                    let lobby_ready = new Message("lobby info", lobby)
+                    client.send(JSON.stringify(lobby_ready))
+                }
             }
-        }
-    })
 
-});
+
+
+        });
+
+    })
+})
+
 
 wss.on('listening', (socket) => {
     console.log('listener activated)')
 })
-
-
 
 function createLobby(lobby_list, hostsockid){
     function generateLobbyCode(lobby_list){

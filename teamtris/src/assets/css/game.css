@@ -1,8 +1,8 @@
 
 @font-face {
     font-family: 'zen_kurenaidoregular';
-    src: url('fonts/zenkurenaido-regular-webfont.woff2') format('woff2'),
-         url('fonts/zenkurenaido-regular-webfont.woff') format('woff');
+    src: url('../fonts/zenkurenaido-regular-webfont.woff2') format('woff2'),
+         url('../fonts/zenkurenaido-regular-webfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 

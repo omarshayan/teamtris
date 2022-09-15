@@ -49,6 +49,7 @@
 
   let onLobbyJoin = (game: Game2P) => {
       console.log('lobby joined')
+      console.log('plaiyer list: ', store.state.lobby.playerIds)
   }
 
   let startGame = (game: Game) => {

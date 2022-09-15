@@ -9,6 +9,7 @@ export interface Lobby {
     hostsockid: string
     gameReady: boolean
     players: User[]
+    playerIds: string[]
 }
 
 export default () => ({ 
