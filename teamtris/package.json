@@ -39,7 +39,7 @@
     "vue-tsc": "^0.35.2"
   },
   "scripts": {
-    "start": "vite --host",
+    "start": "npm i && vite --host",
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview --port 4173",
