@@ -7,7 +7,7 @@ import UI from "./UI"
 import SimplePeer from 'simple-peer'
 import Game from "./game"
 import { ConfigState } from '@/store/config'
-import Message from "./messenger"
+import { wrtcMessage } from "./messenger"
 import Clock from './types/clock'
 import { Console } from 'console'
 
@@ -61,7 +61,7 @@ class Game2P extends Game {
 
 
             //sending initial gamestate in form of a message, where bag_data contains the initial bag's mino letters in the format X,X,X,X,X,X,X
-            let init_gamestate = new Message("host", "initial gamestate", bag_data)
+            let init_gamestate = new wrtcMessage("initial gamestate", bag_data)
 
             console.log("sending init gamestate to host!")
 
@@ -167,7 +167,7 @@ class Game2P extends Game {
 
             this.peer!.send(JSON.stringify(piece_dropped))
         }
-        const newClock: Clock = this.logic(clock)
+            const newClock: Clock = this.logic(clock) 
         if (!this.activeTurn) {
             Object.values(newClock).forEach((val) => val = 0)
             newClock.sd           = 0

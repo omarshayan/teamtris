@@ -6,7 +6,7 @@
   import Renderer from '@/composables/game/graphics'
   import Game from '@/composables/game/game'
     import Game2P from '@/composables/game/game2p'
-  import P2P from '@/composables/game/p2p'
+  import WebsocketConnection from '@/composables/game/p2p'
   import ConfigState from '@/store/config'
   import { useStore } from '@/store/store'
   import router from '@/router'
@@ -14,11 +14,12 @@
   import LineCounter from '@/components/elements/LineCounter.vue'
   import ConnectCodeScreen from '../elements/ConnectCodeScreen.vue'
 
-  import api from '@/api/api'
-  import users from '@/api/data/user'
-  import score from '@/api/data/score'
-import { watch } from 'fs'
+//   import api from '@/api/api'
+//   import users from '@/api/data/user'
+//   import score from '@/api/data/score'
+// import { watch } from 'fs'
 import PlayerList from '../elements/PlayerList.vue'
+
 
   const props = defineProps<{
     numLines: number,
@@ -46,13 +47,13 @@ import PlayerList from '../elements/PlayerList.vue'
 
   store.watch(() => store.state.lobby.playerIds, (playerIds) => {
     console.log('player id list changed')
-    players.value = store.state.lobby.playerIds.map(async (id) => {
-        const res = await api.invoke(users().info, undefined, {id: id})
-        if(res.success){
-          return res.data
-        }
-        return null;
-      });
+    // players.value = store.state.lobby.playerIds.map(async (id) => {
+    //     const res = await api.invoke(users().info, undefined, {id: id})
+    //     if(res.success){
+    //       return res.data
+    //     }
+    //     return null;
+    //   });
   })
   // events
 
@@ -76,7 +77,7 @@ import PlayerList from '../elements/PlayerList.vue'
 
 
       
-      // localstate.game?.start()
+      localstate.game?.start()
   }
 
 
@@ -112,13 +113,14 @@ import PlayerList from '../elements/PlayerList.vue'
 
 
       localstate.game = new Game2P(timer, lineCounter, configuration, renderer, props.isHost) as Game2P
-      const p2p = new P2P(props.isHost, localstate.game, onLobbyJoin, code)
+      const wss = new WebsocketConnection(props.isHost, localstate.game, onLobbyJoin, code)
+      wss.connect()
       console.log("two player game")
       if(props.isHost) {
-        p2p.setup(props.isHost, localstate.game, onLobbyJoin)
+        wss.setup(props.isHost, localstate.game, onLobbyJoin)
       }
       else if (!props.isHost) {
-        p2p.setup(props.isHost, localstate.game, onLobbyJoin, props.connectCode)
+        wss.setup(props.isHost, localstate.game, onLobbyJoin, props.connectCode)
       }
 
     

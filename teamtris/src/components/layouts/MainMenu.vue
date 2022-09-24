@@ -9,8 +9,7 @@
     import lobbyAPI, { Lobby } from '@/api/data/lobby'
     import { useStore } from '@/store/store'
 
-    import api from '@/api/api'
-
+    import WebsocketConnection from '@/composables/game/p2p'
     
     const router = useRouter()
 
@@ -30,25 +29,22 @@
     }
 
     let onConnectCodeSubmit = async (e: any) => {
-        console.log(e)
+        console.log("code submitted :" , e)
         // validate alphanumeric and length?
         // check if a lobby exists with that connect code
-        const res = await api.invoke(lobbyAPI().byCode, undefined, {code: e})
-        let lobby: Lobby
+        // const res = await api.invoke(lobbyAPI().byCode, undefined, {code: e})
 
-        if (!res) {
-            console.warn('couln\'nt query lobby api')
-            return
-        }
-        lobby = res
+        // if (!res) {
+        //     console.warn('couln\'nt query lobby api')
+        //     return
+        // }
+        // lobby = res
         // TODO: show a loading screen
         // connect to lobby and ridirect to game
 
-        if( e == lobby.code ) {
-            store.commit('setConnectCode', lobby.code)
-            router.push('/guest')
-        } 
-        console.log('lobby: ' , lobby)
+        store.commit('setConnectCode', e)
+        router.push('/guest')
+
     }
 
 </script>

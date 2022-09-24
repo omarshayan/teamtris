@@ -10,6 +10,8 @@ export interface Lobby {
     gameReady: boolean
     players: User[]
     playerIds: string[]
+    hostId: string | null
+    guestId: string | null
 }
 
 export default () => ({ 

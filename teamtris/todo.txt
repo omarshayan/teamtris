@@ -37,7 +37,7 @@ serverside:
 
 working on chat:
 -> lobby.ts is a problem
-    - P2P should occur async while DOM is setup
+    - WebsocketConnectionshould occur async while DOM is setup
     - chat and start button will activate upon connection
 
 next steps:
