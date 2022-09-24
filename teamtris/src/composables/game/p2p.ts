@@ -46,7 +46,7 @@ export default class P2P {
         return socket
     }
         
-    public async setup(isHost: boolean, game: Game2P, onConnect: (game: Game2P) => void, connectCode?: string){
+    public async setup(isHost: boolean, game: Game2P, onConnect: (game: Game2P) => void, connectCode?: string) {
     
         //chat
     
