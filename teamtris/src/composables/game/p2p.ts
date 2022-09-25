@@ -91,6 +91,7 @@ export default class WebsocketConnection{
             if(lobby.players){
                 this.store.commit('setPlayerIds', {hostId: lobby.hostId, guestId: lobby.guestId})
             }
+            // console.log('players: ', {this.store.state.lobby.hostId, this.store.state.lobby.guestId})
         }
 
         if (message.metadata == "lobby info"){
