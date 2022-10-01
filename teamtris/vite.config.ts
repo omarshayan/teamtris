@@ -15,26 +15,27 @@ export default defineConfig({
   },
   optimizeDeps: {
     esbuildOptions: {
-      plugins: [
-        NodeModulesPolyfills(),
-        GlobalsPolyfills({
-          process: true,
-          buffer: true,
-        }),
-      ],
+      // plugins: [
+      //   NodeModulesPolyfills(),
+      //   GlobalsPolyfills({
+      //     process: true,
+      //     buffer: true,
+      //   }),
+      // ],
       define: {
         global: 'globalThis'
       }
     }
   },
   server: {
-    host: true,
+    // host: true,
     port: 8080,
+    hmr:false,
     // https: true,
     // open: true,
-    fs: {
-      strict: false,
-      allow: ['..'],
-    }
+    // fs: {
+    //   strict: false,
+    //   allow: ['..'],
+    // }
   }
 })
