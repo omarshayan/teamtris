@@ -52,9 +52,7 @@
   import { useStore } from '@/store/store';
   import { useRouter } from 'vue-router';
   import { ref } from 'vue'
-  import api from '@/api/api';
-  import users, {User, Auth} from '@/api/data/user'
-
+  // import api from '@/api/api';
   const store = useStore()
       
   const router = useRouter()
@@ -83,18 +81,18 @@
     console.log('loggin in')
 
 
-    const res = await api.invoke( users().login, undefined, undefined, {username: username, password: password})
-    console.log(res)
-    if(!res.success){
-      formError = true
-      console.log('res error')
-      return
-    }
+    // const res = await api.invoke( users().login, undefined, undefined, {username: username, password: password})
+    // console.log(res)
+    // if(!res.success){
+    //   formError = true
+    //   console.log('res error')
+    //   return
+    // }
 
-    const user = res.data.user
-    store.commit('login', user)
+    // const user = res.data.user
+    // store.commit('login', user)
 
-    router.push('/')
+    // router.push('/')
 
 
 }

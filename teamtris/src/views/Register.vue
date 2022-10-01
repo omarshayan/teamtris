@@ -54,7 +54,6 @@
 
 // events
 
-  import api from '@/api/api'
   import { ref, reactive, useCssVars } from 'vue'
   import Input from '@/components/elements/Input.vue'
   import ValidationMessage from '@/components/elements/ValidationMessage.vue'
@@ -84,12 +83,12 @@
     const user = usernametext.value
     const pass = passwordtext.value 
     console.log('submitting :\nusername: ', user, '\npassword: ', pass)
-    api.register(user, pass).then( (res) => {
-      console.log(res)
-      if(res.status = false){
-        formError = true
-      }
-    })
+    // api.register(user, pass).then( (res) => {
+    //   console.log(res)
+    //   if(res.status = false){
+    //     formError = true
+    //   }
+    // })
     // const res = await api.register(user, pass)
     // console.log
 }

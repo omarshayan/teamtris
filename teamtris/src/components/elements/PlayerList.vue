@@ -1,5 +1,4 @@
 <script setup lang="ts">
-    import { User } from '@/api/data/user'
     import PlayerListItem from '@/components/elements/PlayerListItem.vue'
 import { useStore } from 'vuex';
 

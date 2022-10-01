@@ -1,5 +1,14 @@
-import { Lobby } from '@/api/data/lobby'
-import { User } from '@/api/data/user'
+
+
+export interface LobbyState {
+    code: string
+    hostsockid: string
+    gameReady: boolean
+    playerIds: string[]
+    hostId: string | null
+    guestId: string | null
+}
+
 
 export default {
     state: () => ({
@@ -15,17 +24,17 @@ export default {
     // sdf: number,
     }),
     mutations: {
-        setConnectCode: function(state: Lobby, code: string) {
+        setConnectCode: function(state: LobbyState, code: string) {
             state.code = code
         },
-        setHostSockID: function(state: Lobby, hostsockid: string) {
+        setHostSockID: function(state: LobbyState, hostsockid: string) {
             state.hostsockid = hostsockid
         },
-        setPlayerIds: function(state: Lobby, ids: {hostId: string, guestId: string}) {
+        setPlayerIds: function(state: LobbyState, ids: {hostId: string, guestId: string}) {
             state.hostId = ids.hostId
             state.guestId = ids.guestId
         },
-        updatePlayerList: function(state: Lobby, playerIds: string[]) {
+        updatePlayerList: function(state: LobbyState, playerIds: string[]) {
             console.log('updating playerIds to ', playerIds)
             state.playerIds = playerIds
         }

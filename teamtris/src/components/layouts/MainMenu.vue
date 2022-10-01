@@ -6,7 +6,6 @@
     import ProfileBar from './ProfileBar.vue'
     import Input from '../elements/Input.vue'
     
-    import lobbyAPI, { Lobby } from '@/api/data/lobby'
     import { useStore } from '@/store/store'
 
     import WebsocketConnection from '@/composables/game/p2p'

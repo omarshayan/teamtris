@@ -3,7 +3,7 @@
     import { reactive } from 'vue';
     import { RouterLink } from 'vue-router';
 
-    import api from '@/api/api';
+    // import api from '@/api/api';
     import { useStore } from '@/store/store';
 
     const store = useStore()

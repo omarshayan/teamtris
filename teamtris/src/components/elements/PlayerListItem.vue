@@ -1,9 +1,7 @@
 <script setup lang='ts'>
-    import { User } from '@/api/data/user'
     import { defineProps } from 'vue';
 
     const props = defineProps<{
-        user?: User
         username: string
     }>()
 

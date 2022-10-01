@@ -1,7 +1,5 @@
-import { User } from '@/api/data/user'
-
 export interface UserState {
-  data: User | null
+  data: any | null
 }
 
 export default {
@@ -11,7 +9,7 @@ export default {
   }),
 
   mutations: {
-    login: function (state: UserState, payload: User) {
+    login: function (state: UserState, payload: any) {
       state.data = payload;
     }
   },

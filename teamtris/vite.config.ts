@@ -28,9 +28,10 @@ export default defineConfig({
     }
   },
   server: {
+    host: true,
     port: 8080,
-    https: true,
-    open: true,
+    // https: true,
+    // open: true,
     fs: {
       strict: false,
       allow: ['..'],
