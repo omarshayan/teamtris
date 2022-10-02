@@ -16,12 +16,7 @@
 </script>
 
 <template>
-  <NameEntryModal
-    v-if="!nameSubmitted"
-    
-  ></NameEntryModal>
   <Game2P
-    v-else-if="nameSubmitted"
     :num-lines="40"
     :is-host="false"
     :connectCode="connectCode"

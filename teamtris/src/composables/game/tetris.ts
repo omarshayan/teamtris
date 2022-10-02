@@ -6,6 +6,7 @@ const letters = ['T', 'I', 'O', 'S', 'Z', 'J', 'L']
 
 const blankRow: any[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+type any = string | number
 
 const tetrimatrices: any = {
     T: [[[0, 1, 0],
@@ -404,7 +405,6 @@ export class Tetrimino {
         if(!this.placed){
             for(let row = this.pos[0]; row < board.rows; row++) {
                 this.pos[0] = row
-                console.log('row: ', row)
                 if(!board.checkCollision(this) && board.checkCollision(this, [1, 0])){
                     console.log("placing piece at ", this.pos)
                     this.place(board, this.pos, this.orientation)
@@ -420,20 +420,21 @@ export class Tetrimino {
             this.pos = pos
             this.orientation = orientation
             this.placedAt = pos
-            console.log('placing piece due to instructions..')
         }
                 console.log("placing  at ", this.placedAt)
+        let a  = JSON.parse(JSON.stringify(board.cells))
+        console.log("cells before placement: ", a)
         for(let x = 0; x < this.size; x++) {
             for(let y = 0; y < this.size; y++){
                 if(this.shape[y][x] == 1){
                     let letterToPlace = this.letter
-                    let newBoard = board.cells
+                    let newBoard = JSON.parse(JSON.stringify(board.cells))
                     newBoard[this.pos[0] + y][this.pos[1] + x] = letterToPlace
                     board.cells = newBoard 
                 }
             }
         }
-
+        
 
 
         board.clearLines()
@@ -550,20 +551,24 @@ export class Board {
 
     public clearLines() {
         var linesCleared = 0
-        for(let row = this.rows - 1; row >= 3; row--) {
-            if(this.cells[row].indexOf(0) === -1){
-                for(let rowAbove = row; rowAbove > 3; rowAbove--){
-                    let temp = this.cells[rowAbove - 1]
-                    this.cells[rowAbove] = temp
-                }
+        let newBoard = JSON.parse(JSON.stringify(this.cells))
+        for(let row = this.rows - 1; row >= 3; row--) { // for each row
+            if(newBoard[row].indexOf(0) === -1){ // if the row is full,
                 let emptyRow = blankRow
-                this.cells[0] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                newBoard[0] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                    newBoard[3] = emptyRow
+                for(let rowAbove = row; rowAbove > 3; rowAbove--){ // for each row above the row
+                    let temp = newBoard[rowAbove - 1]
+                    newBoard[rowAbove] = temp
+                }
                 row++
                 linesCleared++
             }
         }
+        this.cells = newBoard
         this.linesCleared += linesCleared
 
+        console.log(this.cells)
     }
 
 
