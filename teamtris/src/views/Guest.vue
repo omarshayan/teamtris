@@ -1,7 +1,7 @@
 <script setup lang='ts'>
   import Game2P from '@/components/layouts/Game2P.vue'
   import { useStore } from '@/store/store'
-
+  import NameEntryModal from '@/components/layouts/NameEntry.vue'
   // props
   const props = defineProps({
       connectCode: String
@@ -11,9 +11,17 @@
   const store = useStore()
   console.log('guest store: ' ,store.state)
   const connectCode = store.state.lobby.code
+
+  let nameSubmitted = false
 </script>
+
 <template>
+  <NameEntryModal
+    v-if="!nameSubmitted"
+    
+  ></NameEntryModal>
   <Game2P
+    v-else-if="nameSubmitted"
     :num-lines="40"
     :is-host="false"
     :connectCode="connectCode"
