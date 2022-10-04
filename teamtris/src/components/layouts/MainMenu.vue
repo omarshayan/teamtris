@@ -18,7 +18,7 @@
 
     // events
     let goToNewGame = () => {
-        router.push('/host')
+        router.push('/coop')
     }
     let goToSettings = () => {
         router.push('/settings')
@@ -42,7 +42,7 @@
         // connect to lobby and ridirect to game
 
         store.commit('setConnectCode', e)
-        router.push('/guest')
+        router.push('/coop')
 
     }
 

@@ -8,6 +8,7 @@ import SoloGame from '../views/SoloGame.vue'
 import Settings from '../views/Settings.vue'
 import Host     from '../views/Host.vue'
 import Guest    from '../views/Guest.vue'
+import Coop     from '../views/CoopGame.vue'
 import Login    from '../views/Login.vue'
 import Register    from '../views/Register.vue'
 
@@ -55,6 +56,12 @@ const router = createRouter({
       component: Guest,
       meta: {transition: 'slide-left'}
     },
+    {
+      path: '/coop',
+      name: 'coop',
+      component: Coop,
+      meta: {transition: 'slide-left'}
+    }
   ]
 })
 

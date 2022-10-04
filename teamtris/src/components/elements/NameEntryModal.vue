@@ -3,17 +3,13 @@
     import Input from './Input.vue'
 
     const props = defineProps<{
-        host: boolean,
-
+        isHost: boolean,
     }>()
-    let onNameSubmit = async (e: any) => {
+
+    const emit = defineEmits(['onSubmit:modal'])
+    let onSubmit = async (e: any) => {
         console.log('setting name to: ' + e)
-        if (props.host) {
-            router.push('/host')
-        }
-        else if (props.host == false) {
-            router.push('/guest')
-        }
+        emit('onSubmit:modal', e)    
     }
 </script>
 <template>
@@ -22,7 +18,7 @@
         :maxlength="4"
         :height="80"
         :width="256"
-        @onSubmit:input="onNameSubmit"
+        @onSubmit:input="onSubmit"
         :sidebar="true"       
     ></Input>
 </template>
